@@ -1,0 +1,91 @@
+{% comment %}
+  TikTok Shop style checkout order summary
+  Mobile-first optimized with Tailwind CSS
+  Features: Subtotal, delivery, total
+{% endcomment %}
+
+<div class="bg-gray-900 text-white px-4 py-4">
+  <h2 class="text-lg font-bold mb-4">
+    {{ section.settings.title | default: "Résumé de la commande" }}
+  </h2>
+
+  <div class="space-y-3 mb-4">
+    {% comment %} Subtotal {% endcomment %}
+    <div class="flex items-center justify-between text-sm">
+      <span class="text-gray-300">{{ section.settings.subtotal_label | default: "Sous-total" }}</span>
+      <span class="font-medium">{{ section.settings.subtotal_amount | default: "16,45 €" }}</span>
+    </div>
+
+    {% comment %} Delivery {% endcomment %}
+    <div class="flex items-center justify-between text-sm">
+      <span class="text-gray-300">{{ section.settings.delivery_label | default: "Livraison" }}</span>
+      <span class="font-medium text-gray-400">{{ section.settings.delivery_amount | default: "À calculer" }}</span>
+    </div>
+  </div>
+
+  {% comment %} Total {% endcomment %}
+  <div class="pt-4 border-t border-gray-800">
+    <div class="flex items-center justify-between">
+      <span class="text-sm text-gray-300">
+        {{ section.settings.total_label | default: "Total (TVA incluse, le cas échéant)" }}
+      </span>
+      <span class="text-xl font-bold">{{ section.settings.total_amount | default: "16,45 €" }}</span>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Checkout Order Summary",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Section title",
+      "default": "Résumé de la commande"
+    },
+    {
+      "type": "text",
+      "id": "subtotal_label",
+      "label": "Subtotal label",
+      "default": "Sous-total"
+    },
+    {
+      "type": "text",
+      "id": "subtotal_amount",
+      "label": "Subtotal amount",
+      "default": "16,45 €"
+    },
+    {
+      "type": "text",
+      "id": "delivery_label",
+      "label": "Delivery label",
+      "default": "Livraison"
+    },
+    {
+      "type": "text",
+      "id": "delivery_amount",
+      "label": "Delivery amount",
+      "default": "À calculer"
+    },
+    {
+      "type": "text",
+      "id": "total_label",
+      "label": "Total label",
+      "default": "Total (TVA incluse, le cas échéant)"
+    },
+    {
+      "type": "text",
+      "id": "total_amount",
+      "label": "Total amount",
+      "default": "16,45 €"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Checkout Order Summary"
+    }
+  ]
+}
+{% endschema %}
+

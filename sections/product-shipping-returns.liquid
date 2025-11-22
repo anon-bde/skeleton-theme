@@ -1,0 +1,205 @@
+{% comment %}
+  TikTok Shop style shipping and returns section
+  Mobile-first optimized with Tailwind CSS
+  Features: Delivery info and return policy
+{% endcomment %}
+
+<div class="bg-gray-900 text-white px-4 py-6">
+  {% comment %} Section Title {% endcomment %}
+  <h2 class="text-2xl font-bold mb-4">
+    {{ section.settings.title | default: "Livraison et retours" }}
+  </h2>
+
+  {% comment %} Free Delivery Subsection {% endcomment %}
+  <div class="mb-4">
+    <button
+      type="button"
+      class="w-full flex items-center justify-between py-3 border-b border-gray-800"
+      onclick="toggleDeliveryDetails(this)"
+      aria-expanded="false"
+    >
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-full bg-teal-500/20 flex items-center justify-center flex-shrink-0">
+          <svg class="w-5 h-5 text-teal-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
+          </svg>
+        </div>
+        <span class="font-semibold text-left">
+          {{ section.settings.delivery_title | default: "Livraison gratuite" }}
+        </span>
+      </div>
+      <svg class="w-5 h-5 text-gray-400 flex-shrink-0 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+      </svg>
+    </button>
+
+    {% comment %} Delivery Details (Initially Hidden) {% endcomment %}
+    <div class="delivery-details hidden pl-[52px] pt-3 pb-2">
+      {% if section.settings.delivery_date != blank %}
+        <p class="text-sm text-gray-300 mb-2">
+          {{ section.settings.delivery_date_label | default: "Livraison prévue le" }} {{ section.settings.delivery_date }}
+        </p>
+      {% endif %}
+
+      {% if section.settings.delivery_conditions != blank %}
+        <p class="text-sm text-gray-300 mb-2">
+          {{ section.settings.delivery_conditions_prefix | default: "En cas d'expédition à Paris," }}
+          <a href="{{ section.settings.delivery_conditions_url | default: '#' }}" class="text-blue-400 hover:text-blue-300 underline">
+            {{ section.settings.delivery_conditions | default: "conditions applicables." }}
+          </a>
+        </p>
+      {% endif %}
+
+      {% if section.settings.shipped_by != blank %}
+        <div class="flex items-center gap-2 mt-3">
+          <svg class="w-4 h-4 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+          </svg>
+          <span class="text-xs text-gray-400">
+            {{ section.settings.shipped_by | default: "Expédié par TikTok" }}
+          </span>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+
+  {% comment %} Return Policy Subsection {% endcomment %}
+  <div>
+    <button
+      type="button"
+      class="w-full flex items-center justify-between py-3 border-b border-gray-800"
+      onclick="toggleReturnDetails(this)"
+      aria-expanded="false"
+    >
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-full bg-teal-500/20 flex items-center justify-center flex-shrink-0">
+          <svg class="w-5 h-5 text-teal-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+          </svg>
+        </div>
+        <span class="font-semibold text-left">
+          {{ section.settings.return_title | default: "Politique de retours" }}
+        </span>
+      </div>
+      <svg class="w-5 h-5 text-gray-400 flex-shrink-0 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+      </svg>
+    </button>
+
+    {% comment %} Return Policy Details (Initially Hidden) {% endcomment %}
+    <div class="return-details hidden pl-[52px] pt-3 pb-2">
+      <p class="text-sm text-gray-300 leading-relaxed">
+        {{ section.settings.return_policy_text | default: "L'article peut être retourné dans les 30 jours suivant la livraison. Le droit de rétractation statutaire s'applique également. D'autres droits peuvent s'appliquer, notamment tes droits de garantie légale." }}
+      </p>
+    </div>
+  </div>
+</div>
+
+<script>
+  function toggleDeliveryDetails(button) {
+    const details = button.nextElementSibling;
+    const chevron = button.querySelector('svg:last-child');
+    const isExpanded = button.getAttribute('aria-expanded') === 'true';
+    
+    if (isExpanded) {
+      details.classList.add('hidden');
+      chevron.style.transform = 'rotate(0deg)';
+      button.setAttribute('aria-expanded', 'false');
+    } else {
+      details.classList.remove('hidden');
+      chevron.style.transform = 'rotate(90deg)';
+      button.setAttribute('aria-expanded', 'true');
+    }
+  }
+
+  function toggleReturnDetails(button) {
+    const details = button.nextElementSibling;
+    const chevron = button.querySelector('svg:last-child');
+    const isExpanded = button.getAttribute('aria-expanded') === 'true';
+    
+    if (isExpanded) {
+      details.classList.add('hidden');
+      chevron.style.transform = 'rotate(0deg)';
+      button.setAttribute('aria-expanded', 'false');
+    } else {
+      details.classList.remove('hidden');
+      chevron.style.transform = 'rotate(90deg)';
+      button.setAttribute('aria-expanded', 'true');
+    }
+  }
+</script>
+
+{% schema %}
+{
+  "name": "Product Shipping & Returns",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Section title",
+      "default": "Livraison et retours"
+    },
+    {
+      "type": "text",
+      "id": "delivery_title",
+      "label": "Delivery title",
+      "default": "Livraison gratuite"
+    },
+    {
+      "type": "text",
+      "id": "delivery_date",
+      "label": "Delivery date",
+      "default": "1-8 déc.",
+      "info": "Leave empty to hide"
+    },
+    {
+      "type": "text",
+      "id": "delivery_date_label",
+      "label": "Delivery date label",
+      "default": "Livraison prévue le"
+    },
+    {
+      "type": "text",
+      "id": "delivery_conditions",
+      "label": "Delivery conditions link text",
+      "default": "conditions applicables."
+    },
+    {
+      "type": "text",
+      "id": "delivery_conditions_prefix",
+      "label": "Delivery conditions prefix",
+      "default": "En cas d'expédition à Paris,"
+    },
+    {
+      "type": "url",
+      "id": "delivery_conditions_url",
+      "label": "Delivery conditions URL"
+    },
+    {
+      "type": "text",
+      "id": "shipped_by",
+      "label": "Shipped by text",
+      "default": "Expédié par TikTok",
+      "info": "Leave empty to hide"
+    },
+    {
+      "type": "text",
+      "id": "return_title",
+      "label": "Return policy title",
+      "default": "Politique de retours"
+    },
+    {
+      "type": "textarea",
+      "id": "return_policy_text",
+      "label": "Return policy text",
+      "default": "L'article peut être retourné dans les 30 jours suivant la livraison. Le droit de rétractation statutaire s'applique également. D'autres droits peuvent s'appliquer, notamment tes droits de garantie légale."
+    }
+  ],
+  "presets": [
+    {
+      "name": "Product Shipping & Returns"
+    }
+  ]
+}
+{% endschema %}
+

@@ -1,0 +1,132 @@
+{
+  "sections": {
+    "checkout_header": {
+      "type": "checkout-header",
+      "settings": {
+        "title": "Paiement",
+        "show_security_message": true,
+        "security_message": "Tes informations sont sécurisées et chiffrées"
+      }
+    },
+    "checkout_security_banner": {
+      "type": "checkout-security-banner",
+      "settings": {
+        "show_banner": true,
+        "banner_text": "Nous ne partageons jamais les détails du paiement avec..."
+      }
+    },
+    "checkout_terms": {
+      "type": "checkout-terms",
+      "settings": {
+        "show_terms": true,
+        "terms_text": "En passant cette commande, tu acceptes les Conditions d'utilisation de TikTok Shop pour l'UE et les Conditions de vente du vendeur pour l'UE. Pour en savoir plus, consulte la UE:Politique de Retours, Rétractation et Garantie Légale et le Politique de confidentialité de TikTok."
+      }
+    },
+    "checkout_shipped_by": {
+      "type": "checkout-shipped-by",
+      "settings": {
+        "shipped_by_label": "Expédié par",
+        "brand_name": "EIKELAND",
+        "show_add_note": true,
+        "add_note_text": "Ajouter une note"
+      }
+    },
+    "checkout_product_details": {
+      "type": "checkout-product-details",
+      "settings": {
+        "product_title": "Veste de sport décontractée pour hommes, conception à fermeture é...",
+        "variant_text": "Beige, S",
+        "product_price": "16,45 €",
+        "quantity": 1
+      }
+    },
+    "checkout_offers": {
+      "type": "checkout-offers",
+      "settings": {
+        "title": "Offres",
+        "no_offers_text": "Aucune disponible",
+        "show_offers_list": false
+      }
+    },
+    "checkout_order_summary": {
+      "type": "checkout-order-summary",
+      "settings": {
+        "title": "Résumé de la commande",
+        "subtotal_label": "Sous-total",
+        "subtotal_amount": "16,45 €",
+        "delivery_label": "Livraison",
+        "delivery_amount": "À calculer",
+        "total_label": "Total (TVA incluse, le cas échéant)",
+        "total_amount": "16,45 €"
+      }
+    },
+    "checkout_delivery_address": {
+      "type": "checkout-delivery-address",
+      "settings": {
+        "title": "Adresse de livraison",
+        "show_add_address": true,
+        "add_address_text": "Ajouter une adresse",
+        "show_notification_dot": true,
+        "show_saved_address": false
+      }
+    },
+    "checkout_offers_updates": {
+      "type": "checkout-offers-updates",
+      "settings": {
+        "title": "Recevoir des offres et des mises à jour",
+        "description": "Reçois des offres et des mises à jour de la part de EIKELAND dans ta boîte de réception TikTok Shop.",
+        "show_learn_more": true,
+        "learn_more_text": "En savoir plus"
+      }
+    },
+    "checkout_protections": {
+      "type": "checkout-protections",
+      "settings": {
+        "title": "Tes protections",
+        "show_view_all": true,
+        "view_all_text": "Tout afficher",
+        "protection_1_text": "Paiements sécurisés",
+        "protection_2_text": "Remboursement accéléré en cas d'articles perdus ou endommagés",
+        "protection_3_text": "Protection des clients",
+        "protection_4_text": "Assistance client 24h/24, 7 j/7"
+      }
+    },
+    "checkout_payment_methods": {
+      "type": "checkout-payment-methods",
+      "settings": {
+        "title": "Mode de paiement",
+        "show_view_all": true,
+        "view_all_text": "Tout afficher",
+        "show_apple_pay": true,
+        "apple_pay_text": "Apple Pay",
+        "show_add_card": true,
+        "add_card_text": "Ajouter une carte de paiement",
+        "show_paypal": true,
+        "paypal_text": "PayPal",
+        "paypal_description": "Paie maintenant ou plus tard avec PayPal"
+      }
+    },
+    "checkout_bottom_cta": {
+      "type": "checkout-bottom-cta",
+      "settings": {
+        "total_label": "Total (1 article)",
+        "total_amount": "16,45 €",
+        "button_text": "Ajouter une adresse"
+      }
+    }
+  },
+  "order": [
+    "checkout_header",
+    "checkout_security_banner",
+    "checkout_terms",
+    "checkout_shipped_by",
+    "checkout_product_details",
+    "checkout_offers",
+    "checkout_order_summary",
+    "checkout_offers_updates",
+    "checkout_protections",
+    "checkout_delivery_address",
+    "checkout_payment_methods",
+    "checkout_bottom_cta"
+  ]
+}

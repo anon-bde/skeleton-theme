@@ -1,0 +1,13 @@
+{
+  "name": "tiktok-shop-theme",
+  "version": "1.0.0",
+  "description": "TikTok Shop product page clone for Shopify theme",
+  "scripts": {
+    "build:css": "tailwindcss -i ./assets/tailwind.css -o ./assets/tailwind-compiled.css --minify",
+    "watch:css": "tailwindcss -i ./assets/tailwind.css -o ./assets/tailwind-compiled.css --watch"
+  },
+  "devDependencies": {
+    "tailwindcss": "^3.4.1"
+  }
+}
+

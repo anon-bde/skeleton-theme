@@ -1,0 +1,276 @@
+{% comment %}
+  TikTok Shop style product size and quantity selector
+  Mobile-first optimized with Tailwind CSS
+  Features: Size dropdown, quantity selector, size guide link
+{% endcomment %}
+
+{% assign product = all_products[section.settings.product] | default: product %}
+{% assign size_option = null %}
+
+{% for option in product.options_with_values %}
+  {% assign option_name_lower = option.name | downcase %}
+  {% if option_name_lower == 'size' or option_name_lower == 'taille' %}
+    {% assign size_option = option %}
+    {% break %}
+  {% endif %}
+{% endfor %}
+
+<div class="bg-gray-900 text-white px-4 py-4">
+  <div class="flex items-center justify-between mb-3">
+    <label class="text-sm font-medium text-gray-300">
+      {{ section.settings.select_label | default: "Sélectionner" }}
+    </label>
+    {% if section.settings.show_size_guide %}
+      <button 
+        type="button"
+        class="text-sm text-blue-400 hover:text-blue-300 underline"
+        onclick="alert('{{ section.settings.size_guide_text | default: "Size guide" }}')"
+      >
+        {{ section.settings.size_guide_label | default: "Guide des tailles" }}
+      </button>
+    {% endif %}
+  </div>
+
+  {% comment %} Size and Quantity Dropdown {% endcomment %}
+  <div class="relative">
+    <button
+      type="button"
+      id="size-quantity-trigger-{{ section.id }}"
+      class="w-full bg-gray-800 hover:bg-gray-700 border border-gray-700 rounded-lg px-4 py-3 flex items-center justify-between text-left transition-colors"
+      aria-haspopup="true"
+      aria-expanded="false"
+    >
+      <span class="text-sm" id="size-quantity-display-{{ section.id }}">
+        {% if size_option %}
+          {{ section.settings.size_label | default: "Taille" }} · {{ section.settings.quantity_label | default: "Quantité" }}
+        {% else %}
+          {{ section.settings.quantity_label | default: "Quantité" }}
+        {% endif %}
+      </span>
+      <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+      </svg>
+    </button>
+
+    {% comment %} Dropdown Panel {% endcomment %}
+    <div
+      id="size-quantity-panel-{{ section.id }}"
+      class="hidden absolute top-full left-0 right-0 mt-2 bg-gray-800 border border-gray-700 rounded-lg shadow-xl z-50 max-h-96 overflow-y-auto"
+    >
+      {% if size_option %}
+        {% comment %} Size Selection {% endcomment %}
+        <div class="p-4 border-b border-gray-700">
+          <label class="block text-sm font-medium text-gray-300 mb-3">
+            {{ section.settings.size_label | default: "Taille" }}
+          </label>
+          <div class="grid grid-cols-4 gap-2">
+            {% for value in size_option.values %}
+              {% assign is_selected = false %}
+              {% if value == size_option.selected_value %}
+                {% assign is_selected = true %}
+              {% endif %}
+              <button
+                type="button"
+                class="size-option px-3 py-2 text-sm rounded-lg border transition-colors {% if is_selected %}bg-white text-gray-900 border-white font-semibold{% else %}bg-gray-700 text-white border-gray-600 hover:border-gray-500{% endif %}"
+                data-size-value="{{ value }}"
+                data-size-index="{{ forloop.index0 }}"
+              >
+                {{ value }}
+              </button>
+            {% endfor %}
+          </div>
+        </div>
+      {% endif %}
+
+      {% comment %} Quantity Selection {% endcomment %}
+      <div class="p-4">
+        <label class="block text-sm font-medium text-gray-300 mb-3">
+          {{ section.settings.quantity_label | default: "Quantité" }}
+        </label>
+        <div class="flex items-center gap-3">
+          <button
+            type="button"
+            class="quantity-decrease w-10 h-10 rounded-lg border border-gray-600 bg-gray-700 hover:bg-gray-600 text-white flex items-center justify-center transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            aria-label="Decrease quantity"
+          >
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4" />
+            </svg>
+          </button>
+          <input
+            type="number"
+            id="quantity-input-{{ section.id }}"
+            name="quantity"
+            value="1"
+            min="1"
+            max="99"
+            class="w-16 text-center bg-gray-700 border border-gray-600 rounded-lg px-2 py-2 text-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            readonly
+          >
+          <button
+            type="button"
+            class="quantity-increase w-10 h-10 rounded-lg border border-gray-600 bg-gray-700 hover:bg-gray-600 text-white flex items-center justify-center transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            aria-label="Increase quantity"
+          >
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  (function() {
+    const sectionId = '{{ section.id }}';
+    const trigger = document.getElementById(`size-quantity-trigger-${sectionId}`);
+    const panel = document.getElementById(`size-quantity-panel-${sectionId}`);
+    const display = document.getElementById(`size-quantity-display-${sectionId}`);
+    const quantityInput = document.getElementById(`quantity-input-${sectionId}`);
+    const decreaseBtn = panel?.querySelector('.quantity-decrease');
+    const increaseBtn = panel?.querySelector('.quantity-increase');
+    const sizeOptions = panel?.querySelectorAll('.size-option');
+
+    let selectedSize = null;
+    let quantity = 1;
+
+    // Toggle dropdown
+    if (trigger && panel) {
+      trigger.addEventListener('click', function(e) {
+        e.stopPropagation();
+        const isExpanded = trigger.getAttribute('aria-expanded') === 'true';
+        trigger.setAttribute('aria-expanded', !isExpanded);
+        panel.classList.toggle('hidden');
+      });
+
+      // Close on outside click
+      document.addEventListener('click', function(e) {
+        if (!panel.contains(e.target) && !trigger.contains(e.target)) {
+          panel.classList.add('hidden');
+          trigger.setAttribute('aria-expanded', 'false');
+        }
+      });
+    }
+
+    // Size selection
+    if (sizeOptions) {
+      sizeOptions.forEach(option => {
+        option.addEventListener('click', function() {
+          selectedSize = this.getAttribute('data-size-value');
+          
+          // Update visual selection
+          sizeOptions.forEach(opt => {
+            if (opt === this) {
+              opt.classList.add('bg-white', 'text-gray-900', 'border-white', 'font-semibold');
+              opt.classList.remove('bg-gray-700', 'text-white', 'border-gray-600');
+            } else {
+              opt.classList.remove('bg-white', 'text-gray-900', 'border-white', 'font-semibold');
+              opt.classList.add('bg-gray-700', 'text-white', 'border-gray-600');
+            }
+          });
+
+          // Update display
+          updateDisplay();
+          
+          // Trigger variant change event
+          document.dispatchEvent(new CustomEvent('product:size-change', {
+            detail: { size: selectedSize }
+          }));
+        });
+      });
+    }
+
+    // Quantity controls
+    if (decreaseBtn && quantityInput) {
+      decreaseBtn.addEventListener('click', function() {
+        if (quantity > 1) {
+          quantity--;
+          quantityInput.value = quantity;
+          updateDisplay();
+        }
+      });
+    }
+
+    if (increaseBtn && quantityInput) {
+      increaseBtn.addEventListener('click', function() {
+        if (quantity < 99) {
+          quantity++;
+          quantityInput.value = quantity;
+          updateDisplay();
+        }
+      });
+    }
+
+    function updateDisplay() {
+      if (!display) return;
+      
+      const parts = [];
+      if (selectedSize) {
+        parts.push(`{{ section.settings.size_label | default: "Taille" }}: ${selectedSize}`);
+      }
+      parts.push(`{{ section.settings.quantity_label | default: "Quantité" }}: ${quantity}`);
+      
+      display.textContent = parts.join(' · ');
+    }
+
+    // Initialize display
+    updateDisplay();
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Product Size & Quantity",
+  "settings": [
+    {
+      "type": "product",
+      "id": "product",
+      "label": "Product",
+      "info": "Leave empty to use the current product"
+    },
+    {
+      "type": "text",
+      "id": "select_label",
+      "label": "Select label",
+      "default": "Sélectionner"
+    },
+    {
+      "type": "text",
+      "id": "size_label",
+      "label": "Size label",
+      "default": "Taille"
+    },
+    {
+      "type": "text",
+      "id": "quantity_label",
+      "label": "Quantity label",
+      "default": "Quantité"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_size_guide",
+      "label": "Show size guide link",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "size_guide_label",
+      "label": "Size guide label",
+      "default": "Guide des tailles"
+    },
+    {
+      "type": "text",
+      "id": "size_guide_text",
+      "label": "Size guide text/URL"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Product Size & Quantity"
+    }
+  ]
+}
+{% endschema %}
+

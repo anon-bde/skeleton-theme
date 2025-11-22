@@ -1,0 +1,72 @@
+{% comment %}
+  TikTok Shop style checkout header
+  Mobile-first optimized with Tailwind CSS
+  Features: Back button, title, security message
+{% endcomment %}
+
+<header class="sticky top-0 z-50 bg-gray-900 text-white border-b border-gray-800">
+  <div class="px-4 py-4">
+    {% comment %} Back Button and Title {% endcomment %}
+    <div class="flex items-center gap-3 mb-3">
+      <button 
+        type="button"
+        onclick="window.history.back()"
+        class="flex items-center justify-center w-10 h-10 rounded-full hover:bg-gray-800 transition-colors"
+        aria-label="Go back"
+      >
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+        </svg>
+      </button>
+      
+      <h1 class="text-xl font-bold flex-1 text-center">
+        {{ section.settings.title | default: "Paiement" }}
+      </h1>
+      
+      {% comment %} Spacer for centering {% endcomment %}
+      <div class="w-10"></div>
+    </div>
+
+    {% comment %} Security Message {% endcomment %}
+    {% if section.settings.show_security_message %}
+      <div class="flex items-center gap-2 text-sm text-gray-300">
+        <svg class="w-4 h-4 text-green-400 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+          <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 8.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+        </svg>
+        <span>{{ section.settings.security_message | default: "Tes informations sont sécurisées et chiffrées" }}</span>
+      </div>
+    {% endif %}
+  </div>
+</header>
+
+{% schema %}
+{
+  "name": "Checkout Header",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Page title",
+      "default": "Paiement"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_security_message",
+      "label": "Show security message",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "security_message",
+      "label": "Security message",
+      "default": "Tes informations sont sécurisées et chiffrées"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Checkout Header"
+    }
+  ]
+}
+{% endschema %}
+

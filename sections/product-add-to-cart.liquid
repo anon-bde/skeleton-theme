@@ -1,0 +1,165 @@
+{% comment %}
+  TikTok Shop style add to cart section
+  Mobile-first optimized with Tailwind CSS
+  Features: Add to cart button, pay button (sticky at bottom)
+{% endcomment %}
+
+<style>
+  /* Add bottom padding to body to prevent content from being hidden behind fixed buttons */
+  body:has(#product-form-{{ section.id }}) {
+    padding-bottom: 88px; /* Height of button bar + padding */
+  }
+  
+  @supports not selector(:has(*)) {
+    body {
+      padding-bottom: 88px;
+    }
+  }
+</style>
+
+{% assign product = all_products[section.settings.product] | default: product %}
+{% assign current_variant = product.selected_or_first_available_variant %}
+
+<div class="fixed bottom-0 left-0 right-0 z-50 bg-gray-900 border-t border-gray-800 px-4 py-3 safe-area-inset-bottom">
+  {% form 'product', product, id: 'product-form-' | append: section.id, class: 'w-full' %}
+    <input type="hidden" name="id" value="{{ current_variant.id }}" id="variant-id-{{ section.id }}">
+    <input type="hidden" name="quantity" value="1" id="quantity-{{ section.id }}">
+
+    <div class="flex gap-3">
+      {% comment %} Add to Cart Button - Dark Gray {% endcomment %}
+      <button
+        type="submit"
+        name="add"
+        class="flex-1 bg-gray-700 hover:bg-gray-600 active:bg-gray-500 text-white font-semibold py-4 px-4 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed text-base"
+        {% unless current_variant.available %}disabled{% endunless %}
+        id="add-to-cart-{{ section.id }}"
+      >
+        {% if current_variant.available %}
+          {{ section.settings.add_to_cart_text | default: "Ajouter au panier" }}
+        {% else %}
+          {{ section.settings.sold_out_text | default: "Rupture de stock" }}
+        {% endif %}
+      </button>
+
+      {% comment %} Pay/Checkout Button - Pink/Red {% endcomment %}
+      <button
+        type="submit"
+        name="add"
+        class="flex-1 bg-rose-500 hover:bg-rose-600 active:bg-rose-700 text-white font-semibold py-4 px-4 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed text-base"
+        {% unless current_variant.available %}disabled{% endunless %}
+        onclick="this.form.action='{{ routes.cart_add_url }}'; this.form.submit(); setTimeout(function(){ window.location.href='{{ routes.cart_url }}'; }, 100); return false;"
+        id="pay-button-{{ section.id }}"
+      >
+        {{ section.settings.pay_text | default: "Payer" }}
+      </button>
+    </div>
+
+    {% comment %} Variant availability message {% endcomment %}
+    {% unless current_variant.available %}
+      <p class="text-sm text-red-400 mt-2 text-center">
+        {{ section.settings.unavailable_message | default: "Ce produit n'est pas disponible" }}
+      </p>
+    {% endunless %}
+  {% endform %}
+</div>
+
+<script>
+  (function() {
+    const sectionId = '{{ section.id }}';
+    const variantInput = document.getElementById(`variant-id-${sectionId}`);
+    const quantityInput = document.getElementById(`quantity-${sectionId}`);
+    const addToCartBtn = document.getElementById(`add-to-cart-${sectionId}`);
+
+    // Listen for variant changes from other sections
+    document.addEventListener('product:color-change', function(e) {
+      // Update variant based on color selection
+      // This would need to be customized based on your variant structure
+      updateVariant();
+    });
+
+    document.addEventListener('product:size-change', function(e) {
+      // Update variant based on size selection
+      updateVariant();
+    });
+
+    // Listen for quantity changes
+    document.addEventListener('product:quantity-change', function(e) {
+      if (quantityInput && e.detail.quantity) {
+        quantityInput.value = e.detail.quantity;
+      }
+    });
+
+    function updateVariant() {
+      // This function would need to find the correct variant based on selected options
+      // For now, it's a placeholder that would need to be implemented based on your product structure
+      console.log('Variant update needed');
+    }
+
+    // Form submission handling
+    const form = document.getElementById(`product-form-${sectionId}`);
+    const payButton = document.getElementById(`pay-button-${sectionId}`);
+    
+    if (form) {
+      form.addEventListener('submit', function(e) {
+        // Add loading state
+        if (addToCartBtn) {
+          addToCartBtn.disabled = true;
+          addToCartBtn.textContent = '{{ section.settings.adding_text | default: "Ajout en cours..." }}';
+        }
+        if (payButton) {
+          payButton.disabled = true;
+        }
+      });
+    }
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Product Add to Cart",
+  "settings": [
+    {
+      "type": "product",
+      "id": "product",
+      "label": "Product",
+      "info": "Leave empty to use the current product"
+    },
+    {
+      "type": "text",
+      "id": "add_to_cart_text",
+      "label": "Add to cart button text",
+      "default": "Ajouter au panier"
+    },
+    {
+      "type": "text",
+      "id": "adding_text",
+      "label": "Adding to cart text",
+      "default": "Ajout en cours..."
+    },
+    {
+      "type": "text",
+      "id": "sold_out_text",
+      "label": "Sold out button text",
+      "default": "Rupture de stock"
+    },
+    {
+      "type": "text",
+      "id": "unavailable_message",
+      "label": "Unavailable message",
+      "default": "Ce produit n'est pas disponible"
+    },
+    {
+      "type": "text",
+      "id": "pay_text",
+      "label": "Pay button text",
+      "default": "Payer"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Product Add to Cart"
+    }
+  ]
+}
+{% endschema %}
+

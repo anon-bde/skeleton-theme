@@ -1,0 +1,89 @@
+{% comment %}
+  TikTok Shop style checkout offers section
+  Mobile-first optimized with Tailwind CSS
+  Features: Available offers display
+{% endcomment %}
+
+<div class="bg-gray-900 text-white px-4 py-4 border-b border-gray-800">
+  <button
+    type="button"
+    class="w-full flex items-center justify-between hover:opacity-80 transition-opacity"
+    onclick="toggleOffers(this)"
+  >
+    <div class="text-left">
+      <h3 class="text-base font-semibold mb-1">
+        {{ section.settings.title | default: "Offres" }}
+      </h3>
+      <p class="text-sm text-gray-400">
+        {{ section.settings.no_offers_text | default: "Aucune disponible" }}
+      </p>
+    </div>
+    <svg class="w-5 h-5 text-gray-400 flex-shrink-0 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+    </svg>
+  </button>
+
+  {% comment %} Offers Details (Hidden by default) {% endcomment %}
+  <div class="offers-details hidden mt-4 pt-4 border-t border-gray-800">
+    {% if section.settings.show_offers_list %}
+      <div class="space-y-2">
+        {% comment %} Add offer items here if needed {% endcomment %}
+        <p class="text-sm text-gray-400">{{ section.settings.offers_message | default: "Aucune offre disponible pour le moment." }}</p>
+      </div>
+    {% endif %}
+  </div>
+</div>
+
+<script>
+  function toggleOffers(button) {
+    const details = button.nextElementSibling;
+    const chevron = button.querySelector('svg');
+    const isExpanded = !details.classList.contains('hidden');
+    
+    if (isExpanded) {
+      details.classList.add('hidden');
+      chevron.style.transform = 'rotate(0deg)';
+    } else {
+      details.classList.remove('hidden');
+      chevron.style.transform = 'rotate(90deg)';
+    }
+  }
+</script>
+
+{% schema %}
+{
+  "name": "Checkout Offers",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Section title",
+      "default": "Offres"
+    },
+    {
+      "type": "text",
+      "id": "no_offers_text",
+      "label": "No offers text",
+      "default": "Aucune disponible"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_offers_list",
+      "label": "Show offers details",
+      "default": false
+    },
+    {
+      "type": "text",
+      "id": "offers_message",
+      "label": "Offers message",
+      "default": "Aucune offre disponible pour le moment."
+    }
+  ],
+  "presets": [
+    {
+      "name": "Checkout Offers"
+    }
+  ]
+}
+{% endschema %}
+

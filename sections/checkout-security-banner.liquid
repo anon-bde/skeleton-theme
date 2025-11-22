@@ -1,0 +1,39 @@
+{% comment %}
+  TikTok Shop style security banner
+  Mobile-first optimized with Tailwind CSS
+  Features: Dark green banner with security message
+{% endcomment %}
+
+{% if section.settings.show_banner %}
+  <div class="bg-green-900 text-white px-4 py-3">
+    <p class="text-sm">
+      {{ section.settings.banner_text | default: "Nous ne partageons jamais les détails du paiement avec..." }}
+    </p>
+  </div>
+{% endif %}
+
+{% schema %}
+{
+  "name": "Checkout Security Banner",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "show_banner",
+      "label": "Show security banner",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "banner_text",
+      "label": "Banner text",
+      "default": "Nous ne partageons jamais les détails du paiement avec..."
+    }
+  ],
+  "presets": [
+    {
+      "name": "Checkout Security Banner"
+    }
+  ]
+}
+{% endschema %}
+

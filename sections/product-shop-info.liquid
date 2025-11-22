@@ -1,0 +1,264 @@
+{% comment %}
+  TikTok Shop style shop information section
+  Mobile-first optimized with Tailwind CSS
+  Features: Shop logo, name, ratings, products, sales, performance metrics
+{% endcomment %}
+
+{% assign shop_rating = section.settings.shop_rating | default: 4.4 %}
+{% assign shop_reviews_count = section.settings.shop_reviews_count | default: 5892 %}
+{% assign shop_products_count = section.settings.shop_products_count | default: 21 %}
+{% assign shop_sales_count = section.settings.shop_sales_count | default: "95.8K+" %}
+
+<div class="bg-gray-900 text-white px-4 py-6">
+  {% comment %} Section Title {% endcomment %}
+  <h2 class="text-2xl font-bold mb-4">
+    {{ section.settings.title | default: "À propos de cette boutique" }}
+  </h2>
+
+  {% comment %} Shop Overview {% endcomment %}
+  <div class="mb-6">
+    <div class="flex items-start gap-4 mb-4">
+      {% comment %} Shop Logo {% endcomment %}
+      <div class="flex-shrink-0">
+        {% if section.settings.shop_logo != blank %}
+          <img 
+            src="{{ section.settings.shop_logo | image_url: width: 64 }}"
+            alt="{{ shop.name }}"
+            class="w-16 h-16 rounded-full object-cover bg-white"
+          >
+        {% else %}
+          <div class="w-16 h-16 rounded-full bg-white flex items-center justify-center">
+            <svg class="w-10 h-10 text-gray-900" fill="currentColor" viewBox="0 0 20 20">
+              <path d="M10 2L3 7v11h4v-6h6v6h4V7l-7-5z"/>
+            </svg>
+          </div>
+        {% endif %}
+      </div>
+
+      {% comment %} Shop Info {% endcomment %}
+      <div class="flex-1 min-w-0">
+        <h3 class="text-xl font-bold mb-2">
+          {{ shop.name }}
+        </h3>
+        
+        {% comment %} Rating {% endcomment %}
+        <div class="flex items-center gap-2 mb-3">
+          <span class="text-lg font-semibold">{{ shop_rating }}</span>
+          <svg class="w-5 h-5 text-yellow-400 fill-current" viewBox="0 0 20 20">
+            <path d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z"/>
+          </svg>
+          <span class="text-sm text-gray-400">({{ shop_reviews_count }} avis)</span>
+        </div>
+
+        {% comment %} Products and Sales {% endcomment %}
+        <div class="flex items-center gap-3 text-sm text-gray-300">
+          <span>{{ shop_products_count }} produits</span>
+          <span class="text-gray-600">|</span>
+          <span>{{ shop_sales_count }} Ventes</span>
+        </div>
+      </div>
+    </div>
+
+    {% comment %} Action Buttons {% endcomment %}
+    <div class="flex gap-3 mb-6">
+      <button
+        type="button"
+        class="flex-1 bg-gray-800 hover:bg-gray-700 text-white font-medium py-3 px-4 rounded-lg transition-colors"
+        onclick="alert('{{ section.settings.message_button_text | default: "Message" }}')"
+      >
+        {{ section.settings.message_button_text | default: "Message" }}
+      </button>
+      <a
+        href="{{ routes.collections_url }}"
+        class="flex-1 bg-gray-800 hover:bg-gray-700 text-white font-medium py-3 px-4 rounded-lg transition-colors text-center"
+      >
+        {{ section.settings.view_shop_text | default: "Voir la boutique" }}
+      </a>
+    </div>
+
+    {% comment %} Shop Performance {% endcomment %}
+    {% if section.settings.show_performance %}
+      <div>
+        <h4 class="text-lg font-bold mb-3">
+          {{ section.settings.performance_title | default: "Performance de la boutique" }}
+        </h4>
+        
+        <p class="text-sm text-gray-300 mb-4">
+          {{ section.settings.performance_text | default: "Meilleur que 99 % des autres vendeurs" }}
+        </p>
+
+        {% comment %} Performance Metrics {% endcomment %}
+        <div class="space-y-4">
+          {% comment %} 4+ Stars Metric {% endcomment %}
+          <div>
+            <div class="flex items-center justify-between mb-2">
+              <div class="flex items-center gap-2">
+                <svg class="w-5 h-5 text-yellow-400 fill-current" viewBox="0 0 20 20">
+                  <path d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z"/>
+                </svg>
+                <span class="text-sm text-gray-300">{{ section.settings.stars_metric_text | default: "4+ étoiles" }}</span>
+              </div>
+              <span class="text-sm font-semibold">{{ section.settings.stars_percentage | default: 88 }}%</span>
+            </div>
+            <div class="w-full bg-gray-800 rounded-full h-2">
+              <div 
+                class="bg-teal-400 h-2 rounded-full transition-all duration-500"
+                style="width: {{ section.settings.stars_percentage | default: 88 }}%"
+              ></div>
+            </div>
+          </div>
+
+          {% comment %} Response Time Metric {% endcomment %}
+          <div>
+            <div class="flex items-center justify-between mb-2">
+              <div class="flex items-center gap-2">
+                <svg class="w-5 h-5 text-teal-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
+                </svg>
+                <span class="text-sm text-gray-300">{{ section.settings.response_metric_text | default: "Répond dans les 24 heures" }}</span>
+              </div>
+              <span class="text-sm font-semibold">{{ section.settings.response_percentage | default: 100 }}%</span>
+            </div>
+            <div class="w-full bg-gray-800 rounded-full h-2">
+              <div 
+                class="bg-teal-400 h-2 rounded-full transition-all duration-500"
+                style="width: {{ section.settings.response_percentage | default: 100 }}%"
+              ></div>
+            </div>
+          </div>
+        </div>
+
+        {% if section.settings.show_learn_more %}
+          <button
+            type="button"
+            class="text-blue-400 hover:text-blue-300 text-sm mt-4 underline"
+            onclick="alert('{{ section.settings.learn_more_text | default: "Learn more" }}')"
+          >
+            {{ section.settings.learn_more_text | default: "En savoir plus >" }}
+          </button>
+        {% endif %}
+      </div>
+    {% endif %}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Product Shop Info",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Section title",
+      "default": "À propos de cette boutique"
+    },
+    {
+      "type": "image_picker",
+      "id": "shop_logo",
+      "label": "Shop logo"
+    },
+    {
+      "type": "text",
+      "id": "shop_rating",
+      "label": "Shop rating",
+      "default": "4.4"
+    },
+    {
+      "type": "text",
+      "id": "shop_reviews_count",
+      "label": "Reviews count",
+      "default": "5892"
+    },
+    {
+      "type": "text",
+      "id": "shop_products_count",
+      "label": "Products count",
+      "default": "21"
+    },
+    {
+      "type": "text",
+      "id": "shop_sales_count",
+      "label": "Sales count",
+      "default": "95.8K+"
+    },
+    {
+      "type": "text",
+      "id": "message_button_text",
+      "label": "Message button text",
+      "default": "Message"
+    },
+    {
+      "type": "text",
+      "id": "view_shop_text",
+      "label": "View shop button text",
+      "default": "Voir la boutique"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_performance",
+      "label": "Show performance metrics",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "performance_title",
+      "label": "Performance title",
+      "default": "Performance de la boutique"
+    },
+    {
+      "type": "text",
+      "id": "performance_text",
+      "label": "Performance text",
+      "default": "Meilleur que 99 % des autres vendeurs"
+    },
+    {
+      "type": "text",
+      "id": "stars_metric_text",
+      "label": "Stars metric text",
+      "default": "4+ étoiles"
+    },
+    {
+      "type": "range",
+      "id": "stars_percentage",
+      "label": "Stars percentage",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "default": 88
+    },
+    {
+      "type": "text",
+      "id": "response_metric_text",
+      "label": "Response metric text",
+      "default": "Répond dans les 24 heures"
+    },
+    {
+      "type": "range",
+      "id": "response_percentage",
+      "label": "Response percentage",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "default": 100
+    },
+    {
+      "type": "checkbox",
+      "id": "show_learn_more",
+      "label": "Show learn more link",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "learn_more_text",
+      "label": "Learn more text",
+      "default": "En savoir plus >"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Product Shop Info"
+    }
+  ]
+}
+{% endschema %}
+

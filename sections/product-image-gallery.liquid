@@ -1,0 +1,199 @@
+{% comment %}
+  TikTok Shop style product image gallery
+  Mobile-first optimized with Tailwind CSS
+  Features: Image carousel, badges/overlays, image indicators
+{% endcomment %}
+
+{% assign product = all_products[section.settings.product] | default: product %}
+
+<div class="relative w-full bg-white" id="product-gallery-{{ section.id }}">
+  {% comment %} Main image container {% endcomment %}
+  <div class="relative w-full aspect-square overflow-hidden">
+    {% if product.images.size > 0 %}
+      {% for image in product.images %}
+        <div 
+          class="product-gallery-image absolute inset-0 w-full h-full transition-opacity duration-300 {% if forloop.first %}opacity-100{% else %}opacity-0{% endif %}"
+          data-image-index="{{ forloop.index0 }}"
+        >
+          {% render 'image', 
+            image: image, 
+            class: 'w-full h-full object-cover',
+            loading: forloop.first ? 'eager' : 'lazy'
+          %}
+        </div>
+      {% endfor %}
+    {% else %}
+      <div class="w-full h-full bg-gray-100 flex items-center justify-center">
+        <svg class="w-24 h-24 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+        </svg>
+      </div>
+    {% endif %}
+
+    {% comment %} Badges/Overlays {% endcomment %}
+    {% if section.settings.show_badges %}
+      <div class="absolute top-4 left-4 z-10">
+        {% if section.settings.badge_text != blank %}
+          <div class="bg-black text-white px-3 py-1.5 rounded flex items-center gap-2 text-xs font-medium">
+            {% if section.settings.badge_icon != blank %}
+              <span>{{ section.settings.badge_icon }}</span>
+            {% endif %}
+            <span>{{ section.settings.badge_text }}</span>
+          </div>
+        {% endif %}
+      </div>
+    {% endif %}
+
+    {% comment %} Navigation arrows (for desktop/tablet) {% endcomment %}
+    {% if product.images.size > 1 %}
+      <button 
+        type="button"
+        class="hidden md:flex absolute left-2 top-1/2 -translate-y-1/2 w-10 h-10 bg-black/50 hover:bg-black/70 text-white rounded-full items-center justify-center transition-colors z-10 product-gallery-prev"
+        aria-label="Previous image"
+      >
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+        </svg>
+      </button>
+      <button 
+        type="button"
+        class="hidden md:flex absolute right-2 top-1/2 -translate-y-1/2 w-10 h-10 bg-black/50 hover:bg-black/70 text-white rounded-full items-center justify-center transition-colors z-10 product-gallery-next"
+        aria-label="Next image"
+      >
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+        </svg>
+      </button>
+    {% endif %}
+  </div>
+
+  {% comment %} Image indicators (dots) {% endcomment %}
+  {% if product.images.size > 1 %}
+    <div class="flex justify-center gap-2 py-4">
+      {% for image in product.images %}
+        <button 
+          type="button"
+          class="product-gallery-indicator w-2 h-2 rounded-full transition-all duration-300 {% if forloop.first %}bg-black w-6{% else %}bg-gray-300{% endif %}"
+          data-image-index="{{ forloop.index0 }}"
+          aria-label="Go to image {{ forloop.index }}"
+        ></button>
+      {% endfor %}
+    </div>
+  {% endif %}
+</div>
+
+<script>
+  (function() {
+    const gallery = document.getElementById('product-gallery-{{ section.id }}');
+    if (!gallery) return;
+
+    const images = gallery.querySelectorAll('.product-gallery-image');
+    const indicators = gallery.querySelectorAll('.product-gallery-indicator');
+    const prevBtn = gallery.querySelector('.product-gallery-prev');
+    const nextBtn = gallery.querySelector('.product-gallery-next');
+    
+    let currentIndex = 0;
+
+    function showImage(index) {
+      images.forEach((img, i) => {
+        img.classList.toggle('opacity-100', i === index);
+        img.classList.toggle('opacity-0', i !== index);
+      });
+
+      indicators.forEach((indicator, i) => {
+        if (i === index) {
+          indicator.classList.add('bg-black', 'w-6');
+          indicator.classList.remove('bg-gray-300', 'w-2');
+        } else {
+          indicator.classList.remove('bg-black', 'w-6');
+          indicator.classList.add('bg-gray-300', 'w-2');
+        }
+      });
+
+      currentIndex = index;
+    }
+
+    function nextImage() {
+      const next = (currentIndex + 1) % images.length;
+      showImage(next);
+    }
+
+    function prevImage() {
+      const prev = (currentIndex - 1 + images.length) % images.length;
+      showImage(prev);
+    }
+
+    // Indicator clicks
+    indicators.forEach((indicator, index) => {
+      indicator.addEventListener('click', () => showImage(index));
+    });
+
+    // Navigation buttons
+    if (prevBtn) prevBtn.addEventListener('click', prevImage);
+    if (nextBtn) nextBtn.addEventListener('click', nextImage);
+
+    // Swipe support for mobile
+    let touchStartX = 0;
+    let touchEndX = 0;
+
+    gallery.addEventListener('touchstart', (e) => {
+      touchStartX = e.changedTouches[0].screenX;
+    });
+
+    gallery.addEventListener('touchend', (e) => {
+      touchEndX = e.changedTouches[0].screenX;
+      handleSwipe();
+    });
+
+    function handleSwipe() {
+      const swipeThreshold = 50;
+      const diff = touchStartX - touchEndX;
+      
+      if (Math.abs(diff) > swipeThreshold) {
+        if (diff > 0) {
+          nextImage();
+        } else {
+          prevImage();
+        }
+      }
+    }
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Product Image Gallery",
+  "settings": [
+    {
+      "type": "product",
+      "id": "product",
+      "label": "Product",
+      "info": "Leave empty to use the current product"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_badges",
+      "label": "Show badges/overlays",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "badge_text",
+      "label": "Badge text",
+      "default": "Étanche"
+    },
+    {
+      "type": "text",
+      "id": "badge_icon",
+      "label": "Badge icon (emoji or text)",
+      "default": "☂️"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Product Image Gallery"
+    }
+  ]
+}
+{% endschema %}
+

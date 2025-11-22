@@ -1,0 +1,506 @@
+{% comment %}
+  TikTok Shop style product reviews section
+  Mobile-first optimized with Tailwind CSS
+  Features: Overall rating, individual review cards
+{% endcomment %}
+
+{% assign product = all_products[section.settings.product] | default: product %}
+{% assign overall_rating = section.settings.overall_rating | default: 4.4 %}
+{% assign total_reviews = section.settings.total_reviews | default: 1435 %}
+
+<div class="bg-gray-900 text-white px-4 py-6">
+  {% comment %} Section Title and Overall Rating {% endcomment %}
+  <div class="mb-6">
+    <h2 class="text-2xl font-bold mb-4">
+      {{ section.settings.title | default: "Avis" }}
+    </h2>
+    
+    <div class="flex items-center gap-3">
+      <span class="text-3xl font-bold">{{ overall_rating }}</span>
+      <div class="flex items-center">
+        {% assign rating_int = overall_rating | floor %}
+        {% assign rating_decimal = overall_rating | minus: rating_int %}
+        {% for i in (1..5) %}
+          {% if i <= rating_int %}
+            <svg class="w-6 h-6 text-yellow-400 fill-current" viewBox="0 0 20 20">
+              <path d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z"/>
+            </svg>
+          {% elsif i == rating_int | plus: 1 and rating_decimal > 0 %}
+            <div class="relative">
+              <svg class="w-6 h-6 text-gray-600 fill-current" viewBox="0 0 20 20">
+                <path d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z"/>
+              </svg>
+              <div class="absolute inset-0 overflow-hidden" style="width: {{ rating_decimal | times: 100 }}%">
+                <svg class="w-6 h-6 text-yellow-400 fill-current" viewBox="0 0 20 20">
+                  <path d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z"/>
+                </svg>
+              </div>
+            </div>
+          {% else %}
+            <svg class="w-6 h-6 text-gray-600 fill-current" viewBox="0 0 20 20">
+              <path d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z"/>
+            </svg>
+          {% endif %}
+        {% endfor %}
+      </div>
+      <span class="text-sm text-gray-400">{{ total_reviews }} avis</span>
+    </div>
+  </div>
+
+  {% comment %} Reviews List {% endcomment %}
+  <div class="space-y-6">
+    {% comment %} Review 1 {% endcomment %}
+    <div class="review-card pb-6 border-b border-gray-800">
+      <div class="flex items-start gap-3 mb-3">
+        {% comment %} Profile Picture {% endcomment %}
+        <div class="flex-shrink-0">
+          {% if section.settings.review_1_avatar != blank %}
+            <img 
+              src="{{ section.settings.review_1_avatar | image_url: width: 48 }}"
+              alt="{{ section.settings.review_1_name }}"
+              class="w-12 h-12 rounded-full object-cover"
+            >
+          {% else %}
+            <div class="w-12 h-12 rounded-full bg-gray-700 flex items-center justify-center">
+              <svg class="w-6 h-6 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd" />
+              </svg>
+            </div>
+          {% endif %}
+        </div>
+
+        {% comment %} Reviewer Info {% endcomment %}
+        <div class="flex-1 min-w-0">
+          <div class="flex items-center gap-2 mb-1 flex-wrap">
+            <span class="font-semibold">{{ section.settings.review_1_name | default: "G**y" }}</span>
+            <span class="text-sm text-gray-400">{{ section.settings.review_1_location | default: "Royaume-Uni" }}</span>
+            {% if section.settings.review_1_verified %}
+              <span class="inline-flex items-center gap-1 text-xs bg-teal-500/20 text-teal-400 px-2 py-0.5 rounded">
+                <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                </svg>
+                {{ section.settings.verified_label | default: "Achat vérifié" }}
+              </span>
+            {% endif %}
+          </div>
+
+          {% comment %} Star Rating {% endcomment %}
+          <div class="flex items-center gap-1 mb-2">
+            {% assign review_1_rating = section.settings.review_1_rating | default: 5 %}
+            {% for i in (1..5) %}
+              {% if i <= review_1_rating %}
+                <svg class="w-4 h-4 text-yellow-400 fill-current" viewBox="0 0 20 20">
+                  <path d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z"/>
+                </svg>
+              {% else %}
+                <svg class="w-4 h-4 text-gray-600 fill-current" viewBox="0 0 20 20">
+                  <path d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z"/>
+                </svg>
+              {% endif %}
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+
+      {% comment %} Review Text {% endcomment %}
+      {% assign review_1_full = section.settings.review_1_text | default: "Honestly looks great. Can't fault it. For the price it's at this is amazing. Buy this. It's got zip pockets and also another two extra pocket on the inside which is great for storing things." %}
+      {% assign review_1_preview = review_1_full | truncate: section.settings.review_text_length %}
+      <div class="mb-3">
+        <p class="text-sm text-gray-300 leading-relaxed" id="review-1-text" data-full-text="{{ review_1_full | escape }}">
+          {{ review_1_preview }}
+        </p>
+        {% if review_1_full.size > section.settings.review_text_length %}
+          <button 
+            type="button"
+            class="text-blue-400 hover:text-blue-300 text-sm mt-1"
+            onclick="toggleReviewText('review-1-text')"
+          >
+            {{ section.settings.see_more_text | default: "Voir plus" }}
+          </button>
+        {% endif %}
+      </div>
+
+      {% comment %} Article Details and Date {% endcomment %}
+      <div class="flex items-center justify-between text-xs text-gray-400 mb-3 flex-wrap gap-2">
+        <span>
+          {{ section.settings.article_label | default: "Article" }} : {{ section.settings.review_1_article | default: "Royal Blue, L" }}
+        </span>
+        <span>{{ section.settings.review_1_date | default: "16 août 2025" }}</span>
+      </div>
+
+      {% comment %} Interactions {% endcomment %}
+      <div class="flex items-center justify-between">
+        <button
+          type="button"
+          class="flex items-center gap-2 text-sm text-gray-400 hover:text-white transition-colors"
+          onclick="toggleHelpful(this)"
+        >
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 10h4.764a2 2 0 011.789 2.894l-3.5 7A2 2 0 0115.263 21h-4.017c-.163 0-.326-.02-.485-.06L7 20m7-10V5a2 2 0 00-2-2h-.095c-.5 0-.905.405-.905.905 0 .714-.211 1.412-.608 2.006L7 11v9m7-10h-2M7 20H5a2 2 0 01-2-2v-6a2 2 0 012-2h2.5" />
+          </svg>
+          <span class="helpful-count">{{ section.settings.review_1_helpful | default: 5 }}</span>
+          {% if section.settings.review_1_helpful == blank or section.settings.review_1_helpful == "0" %}
+            <span>{{ section.settings.helpful_label | default: "Utile ?" }}</span>
+          {% endif %}
+        </button>
+        <button
+          type="button"
+          class="text-blue-400 hover:text-blue-300 text-sm"
+          onclick="alert('{{ section.settings.translation_text | default: "Translation" }}')"
+        >
+          {{ section.settings.translation_text | default: "Voir la traduction" }}
+        </button>
+      </div>
+    </div>
+
+    {% comment %} Review 2 {% endcomment %}
+    <div class="review-card pb-6 border-b border-gray-800">
+      <div class="flex items-start gap-3 mb-3">
+        <div class="flex-shrink-0">
+          {% if section.settings.review_2_avatar != blank %}
+            <img 
+              src="{{ section.settings.review_2_avatar | image_url: width: 48 }}"
+              alt="{{ section.settings.review_2_name }}"
+              class="w-12 h-12 rounded-full object-cover"
+            >
+          {% else %}
+            <div class="w-12 h-12 rounded-full bg-gray-700 flex items-center justify-center">
+              <svg class="w-6 h-6 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd" />
+              </svg>
+            </div>
+          {% endif %}
+        </div>
+
+        <div class="flex-1 min-w-0">
+          <div class="flex items-center gap-2 mb-1 flex-wrap">
+            <span class="font-semibold">{{ section.settings.review_2_name | default: "H**y S**5" }}</span>
+            <span class="text-sm text-gray-400">{{ section.settings.review_2_location | default: "Royaume-Uni" }}</span>
+            {% if section.settings.review_2_verified %}
+              <span class="inline-flex items-center gap-1 text-xs bg-teal-500/20 text-teal-400 px-2 py-0.5 rounded">
+                <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                </svg>
+                {{ section.settings.verified_label | default: "Achat vérifié" }}
+              </span>
+            {% endif %}
+          </div>
+
+          <div class="flex items-center gap-1 mb-2">
+            {% assign review_2_rating = section.settings.review_2_rating | default: 5 %}
+            {% for i in (1..5) %}
+              {% if i <= review_2_rating %}
+                <svg class="w-4 h-4 text-yellow-400 fill-current" viewBox="0 0 20 20">
+                  <path d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z"/>
+                </svg>
+              {% else %}
+                <svg class="w-4 h-4 text-gray-600 fill-current" viewBox="0 0 20 20">
+                  <path d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z"/>
+                </svg>
+              {% endif %}
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+
+      <div class="mb-3">
+        <p class="text-sm text-gray-300 leading-relaxed" id="review-2-text">
+          {{ section.settings.review_2_text | default: "Couldn't be happier with this coat. Completely waterproof, wore it on my dog walk today. Looks class too. Go one size up." }}
+        </p>
+      </div>
+
+      <div class="flex items-center justify-between text-xs text-gray-400 mb-3 flex-wrap gap-2">
+        <span>
+          {{ section.settings.article_label | default: "Article" }} : {{ section.settings.review_2_article | default: "Beige, XL" }}
+        </span>
+        <span>{{ section.settings.review_2_date | default: "10 novembre 2025" }}</span>
+      </div>
+
+      <div class="flex items-center justify-between">
+        <button
+          type="button"
+          class="flex items-center gap-2 text-sm text-gray-400 hover:text-white transition-colors"
+          onclick="toggleHelpful(this)"
+        >
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 10h4.764a2 2 0 011.789 2.894l-3.5 7A2 2 0 0115.263 21h-4.017c-.163 0-.326-.02-.485-.06L7 20m7-10V5a2 2 0 00-2-2h-.095c-.5 0-.905.405-.905.905 0 .714-.211 1.412-.608 2.006L7 11v9m7-10h-2M7 20H5a2 2 0 01-2-2v-6a2 2 0 012-2h2.5" />
+          </svg>
+          <span class="helpful-count">{{ section.settings.review_2_helpful | default: "" }}</span>
+          <span>{{ section.settings.helpful_label | default: "Utile ?" }}</span>
+        </button>
+        <button
+          type="button"
+          class="text-blue-400 hover:text-blue-300 text-sm"
+          onclick="alert('{{ section.settings.translation_text | default: "Translation" }}')"
+        >
+          {{ section.settings.translation_text | default: "Voir la traduction" }}
+        </button>
+      </div>
+    </div>
+
+    {% comment %} Load More Reviews Button {% endcomment %}
+    {% if section.settings.show_load_more %}
+      <button
+        type="button"
+        class="w-full bg-gray-800 hover:bg-gray-700 text-white font-medium py-3 px-4 rounded-lg transition-colors"
+        onclick="alert('{{ section.settings.load_more_text | default: "Load more reviews" }}')"
+      >
+        {{ section.settings.load_more_text | default: "Voir plus d'avis" }}
+      </button>
+    {% endif %}
+  </div>
+</div>
+
+<script>
+  function toggleReviewText(elementId) {
+    const element = document.getElementById(elementId);
+    if (element) {
+      const fullText = element.getAttribute('data-full-text');
+      if (fullText && element.textContent.includes('...')) {
+        element.textContent = fullText;
+        const button = element.nextElementSibling;
+        if (button && button.tagName === 'BUTTON') {
+          button.remove();
+        }
+      }
+    }
+  }
+
+  function toggleHelpful(button) {
+    const countElement = button.querySelector('.helpful-count');
+    const helpfulLabel = button.querySelector('span:last-child');
+    let currentCount = parseInt(countElement.textContent) || 0;
+    
+    if (button.classList.contains('active')) {
+      currentCount--;
+      button.classList.remove('active', 'text-teal-400');
+      button.classList.add('text-gray-400');
+      if (currentCount === 0) {
+        countElement.textContent = '';
+        if (!helpfulLabel.textContent.includes('Utile')) {
+          helpfulLabel.textContent = '{{ section.settings.helpful_label | default: "Utile ?" }}';
+        }
+      } else {
+        countElement.textContent = currentCount;
+        helpfulLabel.textContent = '';
+      }
+    } else {
+      currentCount++;
+      button.classList.add('active', 'text-teal-400');
+      button.classList.remove('text-gray-400');
+      countElement.textContent = currentCount;
+      helpfulLabel.textContent = '';
+    }
+  }
+</script>
+
+{% schema %}
+{
+  "name": "Product Reviews",
+  "settings": [
+    {
+      "type": "product",
+      "id": "product",
+      "label": "Product",
+      "info": "Leave empty to use the current product"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Section title",
+      "default": "Avis"
+    },
+    {
+      "type": "text",
+      "id": "overall_rating",
+      "label": "Overall rating",
+      "default": "4.4"
+    },
+    {
+      "type": "text",
+      "id": "total_reviews",
+      "label": "Total reviews count",
+      "default": "1435"
+    },
+    {
+      "type": "range",
+      "id": "review_text_length",
+      "label": "Review text preview length",
+      "min": 50,
+      "max": 300,
+      "step": 10,
+      "default": 150
+    },
+    {
+      "type": "text",
+      "id": "see_more_text",
+      "label": "See more text",
+      "default": "Voir plus"
+    },
+    {
+      "type": "text",
+      "id": "article_label",
+      "label": "Article label",
+      "default": "Article"
+    },
+    {
+      "type": "text",
+      "id": "helpful_label",
+      "label": "Helpful label",
+      "default": "Utile ?"
+    },
+    {
+      "type": "text",
+      "id": "translation_text",
+      "label": "Translation link text",
+      "default": "Voir la traduction"
+    },
+    {
+      "type": "text",
+      "id": "verified_label",
+      "label": "Verified purchase label",
+      "default": "Achat vérifié"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_load_more",
+      "label": "Show load more button",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "load_more_text",
+      "label": "Load more text",
+      "default": "Voir plus d'avis"
+    },
+    {
+      "type": "header",
+      "content": "Review 1"
+    },
+    {
+      "type": "image_picker",
+      "id": "review_1_avatar",
+      "label": "Reviewer 1 avatar"
+    },
+    {
+      "type": "text",
+      "id": "review_1_name",
+      "label": "Reviewer 1 name",
+      "default": "G**y"
+    },
+    {
+      "type": "text",
+      "id": "review_1_location",
+      "label": "Reviewer 1 location",
+      "default": "Royaume-Uni"
+    },
+    {
+      "type": "checkbox",
+      "id": "review_1_verified",
+      "label": "Review 1 verified purchase",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "review_1_rating",
+      "label": "Review 1 rating",
+      "min": 1,
+      "max": 5,
+      "step": 1,
+      "default": 5
+    },
+    {
+      "type": "textarea",
+      "id": "review_1_text",
+      "label": "Review 1 text",
+      "default": "Honestly looks great. Can't fault it. For the price it's at this is amazing. Buy this. It's got zip pockets and also another two extra pocket on the inside which is great for storing things."
+    },
+    {
+      "type": "text",
+      "id": "review_1_article",
+      "label": "Review 1 article details",
+      "default": "Royal Blue, L"
+    },
+    {
+      "type": "text",
+      "id": "review_1_date",
+      "label": "Review 1 date",
+      "default": "16 août 2025"
+    },
+    {
+      "type": "text",
+      "id": "review_1_helpful",
+      "label": "Review 1 helpful count",
+      "default": "5",
+      "info": "Leave empty to show 'Utile ?' instead"
+    },
+    {
+      "type": "header",
+      "content": "Review 2"
+    },
+    {
+      "type": "image_picker",
+      "id": "review_2_avatar",
+      "label": "Reviewer 2 avatar"
+    },
+    {
+      "type": "text",
+      "id": "review_2_name",
+      "label": "Reviewer 2 name",
+      "default": "H**y S**5"
+    },
+    {
+      "type": "text",
+      "id": "review_2_location",
+      "label": "Reviewer 2 location",
+      "default": "Royaume-Uni"
+    },
+    {
+      "type": "checkbox",
+      "id": "review_2_verified",
+      "label": "Review 2 verified purchase",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "review_2_rating",
+      "label": "Review 2 rating",
+      "min": 1,
+      "max": 5,
+      "step": 1,
+      "default": 5
+    },
+    {
+      "type": "textarea",
+      "id": "review_2_text",
+      "label": "Review 2 text",
+      "default": "Couldn't be happier with this coat. Completely waterproof, wore it on my dog walk today. Looks class too. Go one size up."
+    },
+    {
+      "type": "text",
+      "id": "review_2_article",
+      "label": "Review 2 article details",
+      "default": "Beige, XL"
+    },
+    {
+      "type": "text",
+      "id": "review_2_date",
+      "label": "Review 2 date",
+      "default": "10 novembre 2025"
+    },
+    {
+      "type": "text",
+      "id": "review_2_helpful",
+      "label": "Review 2 helpful count",
+      "default": "",
+      "info": "Leave empty to show 'Utile ?' instead"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Product Reviews"
+    }
+  ]
+}
+{% endschema %}
+

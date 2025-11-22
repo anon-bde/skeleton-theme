@@ -1,0 +1,217 @@
+{% comment %}
+  TikTok Shop style product details section
+  Mobile-first optimized with Tailwind CSS
+  Features: Price, title, seller info, ratings, return policy
+{% endcomment %}
+
+{% assign product = all_products[section.settings.product] | default: product %}
+{% assign current_variant = product.selected_or_first_available_variant %}
+
+<div class="bg-gray-900 text-white px-4 py-6">
+  {% comment %} Price {% endcomment %}
+  <div class="mb-4">
+    <div class="text-4xl font-bold mb-1">
+      {{ current_variant.price | money }}
+    </div>
+    {% if section.settings.show_tax_info %}
+      <div class="text-sm text-gray-400">
+        {{ section.settings.tax_text | default: "TVA comprise" }}
+      </div>
+    {% endif %}
+  </div>
+
+  {% comment %} Product Title {% endcomment %}
+  <h1 class="text-lg font-medium mb-3 leading-tight">
+    {{ product.title }}
+  </h1>
+
+  {% comment %} Seller Information {% endcomment %}
+  {% if section.settings.show_seller %}
+    <div class="text-sm text-gray-300 mb-4">
+      {{ section.settings.seller_label | default: "Vendu par" }} 
+      <span class="font-semibold">{{ shop.name }}</span>
+    </div>
+  {% endif %}
+
+  {% comment %} Ratings and Sales {% endcomment %}
+  {% if section.settings.show_ratings %}
+    <div class="flex items-center gap-3 mb-4 flex-wrap">
+      {% if product.metafields.reviews.rating.value != blank %}
+        {% assign rating = product.metafields.reviews.rating.value %}
+        <div class="flex items-center gap-1">
+          <span class="text-lg font-semibold">{{ rating }}</span>
+          <svg class="w-5 h-5 text-yellow-400 fill-current" viewBox="0 0 20 20">
+            <path d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z"/>
+          </svg>
+        </div>
+      {% else %}
+        <div class="flex items-center gap-1">
+          <span class="text-lg font-semibold">4.4</span>
+          <svg class="w-5 h-5 text-yellow-400 fill-current" viewBox="0 0 20 20">
+            <path d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z"/>
+          </svg>
+        </div>
+      {% endif %}
+
+      {% if product.metafields.reviews.rating_count.value != blank %}
+        {% assign review_count = product.metafields.reviews.rating_count.value %}
+        <span class="text-sm text-gray-400">({{ review_count | divided_by: 1000.0 | round: 1 }}K)</span>
+      {% else %}
+        <span class="text-sm text-gray-400">(1.4K)</span>
+      {% endif %}
+
+      {% if section.settings.show_sales_count %}
+        <span class="text-sm text-gray-400">
+          {{ section.settings.sales_count | default: "31.1K" }} 
+          {{ section.settings.sales_label | default: "vendu" }}
+        </span>
+        <button 
+          type="button"
+          class="text-gray-400 hover:text-white transition-colors"
+          aria-label="Sales information"
+        >
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+        </button>
+      {% endif %}
+    </div>
+  {% endif %}
+
+  {% comment %} Return Policy {% endcomment %}
+  {% if section.settings.show_return_policy %}
+    <button 
+      type="button"
+      class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors mb-4"
+    >
+      {{ section.settings.return_policy_text | default: "Retours gratuits" }}
+    </button>
+  {% endif %}
+
+  {% comment %} Product Description (truncated) {% endcomment %}
+  {% if section.settings.show_description %}
+    <div class="text-sm text-gray-300 leading-relaxed">
+      {% if product.description != blank %}
+        {% assign truncated_description = product.description | strip_html | truncate: section.settings.description_length %}
+        <p>{{ truncated_description }}</p>
+        {% if product.description.size > section.settings.description_length %}
+          <button 
+            type="button"
+            class="text-blue-400 hover:text-blue-300 mt-2 font-medium"
+            onclick="this.previousElementSibling.textContent='{{ product.description | strip_html | escape }}'; this.remove()"
+          >
+            {{ section.settings.read_more_text | default: "Lire la suite" }}
+          </button>
+        {% endif %}
+      {% else %}
+        <p class="text-gray-500">{{ section.settings.default_description }}</p>
+      {% endif %}
+    </div>
+  {% endif %}
+</div>
+
+{% schema %}
+{
+  "name": "Product Details",
+  "settings": [
+    {
+      "type": "product",
+      "id": "product",
+      "label": "Product",
+      "info": "Leave empty to use the current product"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_tax_info",
+      "label": "Show tax information",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "tax_text",
+      "label": "Tax text",
+      "default": "TVA comprise"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_seller",
+      "label": "Show seller information",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "seller_label",
+      "label": "Seller label",
+      "default": "Vendu par"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_ratings",
+      "label": "Show ratings",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_sales_count",
+      "label": "Show sales count",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "sales_count",
+      "label": "Sales count",
+      "default": "31.1K"
+    },
+    {
+      "type": "text",
+      "id": "sales_label",
+      "label": "Sales label",
+      "default": "vendu"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_return_policy",
+      "label": "Show return policy",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "return_policy_text",
+      "label": "Return policy text",
+      "default": "Retours gratuits"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_description",
+      "label": "Show description",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "description_length",
+      "label": "Description preview length",
+      "min": 50,
+      "max": 200,
+      "step": 10,
+      "default": 100
+    },
+    {
+      "type": "text",
+      "id": "read_more_text",
+      "label": "Read more text",
+      "default": "Lire la suite"
+    },
+    {
+      "type": "textarea",
+      "id": "default_description",
+      "label": "Default description (if product has none)"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Product Details"
+    }
+  ]
+}
+{% endschema %}
+

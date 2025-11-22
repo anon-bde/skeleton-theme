@@ -1,0 +1,207 @@
+{% comment %}
+  TikTok Shop style payment methods section
+  Mobile-first optimized with Tailwind CSS
+  Features: Payment method selection (Apple Pay, Card, PayPal)
+{% endcomment %}
+
+<div class="bg-gray-900 text-white px-4 py-4">
+  <div class="flex items-center justify-between mb-4">
+    <h2 class="text-lg font-bold">
+      {{ section.settings.title | default: "Mode de paiement" }}
+    </h2>
+    {% if section.settings.show_view_all %}
+      <button
+        type="button"
+        class="text-sm text-blue-400 hover:text-blue-300"
+        onclick="alert('{{ section.settings.view_all_text | default: "Show all" }}')"
+      >
+        {{ section.settings.view_all_text | default: "Tout afficher" }}
+      </button>
+    {% endif %}
+  </div>
+
+  <div class="space-y-2">
+    {% comment %} Apple Pay Option {% endcomment %}
+    {% if section.settings.show_apple_pay %}
+      <button
+        type="button"
+        class="w-full flex items-center justify-between py-4 px-4 bg-gray-800 hover:bg-gray-700 rounded-lg transition-colors payment-method"
+        data-payment-method="apple_pay"
+        onclick="selectPaymentMethod(this, 'apple_pay')"
+      >
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 bg-black rounded-lg flex items-center justify-center flex-shrink-0">
+            <svg class="w-6 h-6 text-white" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M17.05 20.28c-.98.95-2.05.88-3.08.4-1.09-.5-2.08-.48-3.24 0-1.44.62-2.2.44-3.06-.4C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.8 1.18-.24 2.31-.93 3.57-.84 1.51.12 2.65.72 3.4 1.8-3.12 1.87-2.38 5.98.48 7.13-.57 1.5-1.31 2.99-2.54 4.09l.01-.01zM12.03 7.25c-.15-2.23 1.66-4.07 3.74-4.25.29 2.58-2.34 4.5-3.74 4.25z"/>
+            </svg>
+          </div>
+          <span class="font-medium">{{ section.settings.apple_pay_text | default: "Apple Pay" }}</span>
+        </div>
+        <div class="w-5 h-5 rounded-full border-2 border-red-500 flex items-center justify-center payment-radio">
+          <div class="w-3 h-3 bg-red-500 rounded-full payment-radio-inner"></div>
+        </div>
+      </button>
+    {% endif %}
+
+    {% comment %} Add Payment Card Option {% endcomment %}
+    {% if section.settings.show_add_card %}
+      <button
+        type="button"
+        class="w-full flex items-center justify-between py-4 px-4 bg-gray-800 hover:bg-gray-700 rounded-lg transition-colors"
+        onclick="alert('{{ section.settings.add_card_text | default: "Add payment card" }}')"
+      >
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 bg-gray-700 rounded-lg flex items-center justify-center flex-shrink-0">
+            <svg class="w-5 h-5 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
+            </svg>
+          </div>
+          <span class="font-medium">{{ section.settings.add_card_text | default: "Ajouter une carte de paiement" }}</span>
+        </div>
+        <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+        </svg>
+      </button>
+    {% endif %}
+
+    {% comment %} PayPal Option {% endcomment %}
+    {% if section.settings.show_paypal %}
+      <button
+        type="button"
+        class="w-full flex items-start justify-between py-4 px-4 bg-gray-800 hover:bg-gray-700 rounded-lg transition-colors payment-method"
+        data-payment-method="paypal"
+        onclick="selectPaymentMethod(this, 'paypal')"
+      >
+        <div class="flex-1 text-left">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center flex-shrink-0">
+              <span class="text-white font-bold text-xs">PayPal</span>
+            </div>
+            <div>
+              <span class="font-medium block">{{ section.settings.paypal_text | default: "PayPal" }}</span>
+              {% if section.settings.paypal_description != blank %}
+                <p class="text-xs text-gray-400 mt-1">{{ section.settings.paypal_description }}</p>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+        <div class="w-5 h-5 rounded-full border-2 border-gray-600 flex items-center justify-center payment-radio ml-3 flex-shrink-0 mt-1">
+          <div class="w-3 h-3 bg-transparent rounded-full payment-radio-inner"></div>
+        </div>
+      </button>
+    {% endif %}
+  </div>
+</div>
+
+<script>
+  function selectPaymentMethod(button, method) {
+    // Remove selection from all payment methods
+    document.querySelectorAll('.payment-method').forEach(btn => {
+      const radio = btn.querySelector('.payment-radio');
+      const radioInner = btn.querySelector('.payment-radio-inner');
+      if (radio && radioInner) {
+        radio.classList.remove('border-red-500');
+        radio.classList.add('border-gray-600');
+        radioInner.classList.remove('bg-red-500');
+        radioInner.classList.add('bg-transparent');
+      }
+    });
+
+    // Select the clicked method
+    const radio = button.querySelector('.payment-radio');
+    const radioInner = button.querySelector('.payment-radio-inner');
+    if (radio && radioInner) {
+      radio.classList.remove('border-gray-600');
+      radio.classList.add('border-red-500');
+      radioInner.classList.remove('bg-transparent');
+      radioInner.classList.add('bg-red-500');
+    }
+
+    // Dispatch event for other sections to listen to
+    document.dispatchEvent(new CustomEvent('payment:method-selected', {
+      detail: { method: method }
+    }));
+  }
+
+  // Initialize with Apple Pay selected by default
+  document.addEventListener('DOMContentLoaded', function() {
+    const applePayButton = document.querySelector('[data-payment-method="apple_pay"]');
+    if (applePayButton) {
+      selectPaymentMethod(applePayButton, 'apple_pay');
+    }
+  });
+</script>
+
+{% schema %}
+{
+  "name": "Checkout Payment Methods",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Section title",
+      "default": "Mode de paiement"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_view_all",
+      "label": "Show 'View all' link",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "view_all_text",
+      "label": "View all text",
+      "default": "Tout afficher"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_apple_pay",
+      "label": "Show Apple Pay",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "apple_pay_text",
+      "label": "Apple Pay text",
+      "default": "Apple Pay"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_add_card",
+      "label": "Show add card option",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "add_card_text",
+      "label": "Add card text",
+      "default": "Ajouter une carte de paiement"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_paypal",
+      "label": "Show PayPal",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "paypal_text",
+      "label": "PayPal text",
+      "default": "PayPal"
+    },
+    {
+      "type": "text",
+      "id": "paypal_description",
+      "label": "PayPal description",
+      "default": "Paie maintenant ou plus tard avec PayPal"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Checkout Payment Methods"
+    }
+  ]
+}
+{% endschema %}
+

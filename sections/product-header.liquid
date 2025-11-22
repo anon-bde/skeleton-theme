@@ -1,0 +1,138 @@
+{% comment %}
+  TikTok Shop style product page header
+  Mobile-first optimized with Tailwind CSS
+{% endcomment %}
+
+<header class="sticky top-0 z-50 bg-black text-white">
+  <div class="flex items-center justify-between px-4 py-3">
+    {% comment %} Left side: Back arrow and logo {% endcomment %}
+    <div class="flex items-center gap-3">
+      <button 
+        type="button"
+        onclick="window.history.back()"
+        class="flex items-center justify-center w-10 h-10 rounded-full hover:bg-gray-800 transition-colors"
+        aria-label="Go back"
+      >
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+        </svg>
+      </button>
+      
+      {% if section.settings.show_logo %}
+        <div class="flex items-center gap-2">
+          {% if section.settings.logo != blank %}
+            <img 
+              src="{{ section.settings.logo | image_url: width: 32 }}"
+              alt="{{ shop.name }}"
+              class="w-8 h-8 rounded-full object-cover"
+            >
+          {% else %}
+            <div class="w-8 h-8 rounded-full bg-gray-700 flex items-center justify-center">
+              <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M10 2L3 7v11h4v-6h6v6h4V7l-7-5z"/>
+              </svg>
+            </div>
+          {% endif %}
+          <span class="font-semibold text-sm">{{ shop.name }}</span>
+        </div>
+      {% endif %}
+    </div>
+
+    {% comment %} Right side: Search, share, cart, menu {% endcomment %}
+    <div class="flex items-center gap-2">
+      {% if section.settings.show_search %}
+        <button 
+          type="button"
+          class="flex items-center justify-center w-10 h-10 rounded-full hover:bg-gray-800 transition-colors"
+          aria-label="Search"
+        >
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+          </svg>
+        </button>
+      {% endif %}
+
+      {% if section.settings.show_share %}
+        <button 
+          type="button"
+          class="flex items-center justify-center w-10 h-10 rounded-full hover:bg-gray-800 transition-colors"
+          aria-label="Share"
+        >
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />
+          </svg>
+        </button>
+      {% endif %}
+
+      <a 
+        href="{{ routes.cart_url }}"
+        class="relative flex items-center justify-center w-10 h-10 rounded-full hover:bg-gray-800 transition-colors"
+        aria-label="Shopping cart"
+      >
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+        </svg>
+        {% if cart.item_count > 0 %}
+          <span class="absolute -top-1 -right-1 w-5 h-5 bg-red-500 rounded-full flex items-center justify-center text-xs font-semibold">
+            {{ cart.item_count }}
+          </span>
+        {% endif %}
+      </a>
+
+      {% if section.settings.show_menu %}
+        <button 
+          type="button"
+          class="flex items-center justify-center w-10 h-10 rounded-full hover:bg-gray-800 transition-colors"
+          aria-label="Menu"
+        >
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
+        </button>
+      {% endif %}
+    </div>
+  </div>
+</header>
+
+{% schema %}
+{
+  "name": "Product Header",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "show_logo",
+      "label": "Show logo",
+      "default": true
+    },
+    {
+      "type": "image_picker",
+      "id": "logo",
+      "label": "Logo image"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_search",
+      "label": "Show search icon",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_share",
+      "label": "Show share icon",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_menu",
+      "label": "Show menu icon",
+      "default": true
+    }
+  ],
+  "presets": [
+    {
+      "name": "Product Header"
+    }
+  ]
+}
+{% endschema %}
+

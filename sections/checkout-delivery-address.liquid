@@ -1,0 +1,86 @@
+{% comment %}
+  TikTok Shop style delivery address section
+  Mobile-first optimized with Tailwind CSS
+  Features: Delivery address selection
+{% endcomment %}
+
+<div class="bg-gray-900 text-white px-4 py-4">
+  <h2 class="text-lg font-bold mb-4">
+    {{ section.settings.title | default: "Adresse de livraison" }}
+  </h2>
+
+  {% if section.settings.show_add_address %}
+    <button
+      type="button"
+      class="w-full flex items-center justify-between py-3 px-4 bg-gray-800 hover:bg-gray-700 rounded-lg transition-colors"
+      onclick="alert('{{ section.settings.add_address_text | default: "Add address" }}')"
+    >
+      <div class="flex items-center gap-3">
+        {% if section.settings.show_notification_dot %}
+          <div class="w-2 h-2 bg-red-500 rounded-full"></div>
+        {% endif %}
+        <span class="text-sm font-medium">{{ section.settings.add_address_text | default: "Ajouter une adresse" }}</span>
+      </div>
+      <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+      </svg>
+    </button>
+  {% endif %}
+
+  {% comment %} Display saved address if available {% endcomment %}
+  {% if section.settings.show_saved_address and section.settings.saved_address != blank %}
+    <div class="mt-4 p-4 bg-gray-800 rounded-lg">
+      <p class="text-sm text-gray-300">{{ section.settings.saved_address }}</p>
+    </div>
+  {% endif %}
+</div>
+
+{% schema %}
+{
+  "name": "Checkout Delivery Address",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Section title",
+      "default": "Adresse de livraison"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_add_address",
+      "label": "Show add address button",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "add_address_text",
+      "label": "Add address button text",
+      "default": "Ajouter une adresse"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_notification_dot",
+      "label": "Show notification dot",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_saved_address",
+      "label": "Show saved address",
+      "default": false
+    },
+    {
+      "type": "textarea",
+      "id": "saved_address",
+      "label": "Saved address",
+      "info": "Leave empty to hide"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Checkout Delivery Address"
+    }
+  ]
+}
+{% endschema %}
+

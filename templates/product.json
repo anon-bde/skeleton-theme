@@ -1,20 +1,177 @@
-/*
- * ------------------------------------------------------------
- * IMPORTANT: The contents of this file are auto-generated.
- *
- * This file may be updated by the Shopify admin theme editor
- * or related systems. Please exercise caution as any changes
- * made to this file may be overwritten.
- * ------------------------------------------------------------
- */
 {
   "sections": {
-    "main": {
-      "type": "product",
-      "settings": {}
+    "product_header": {
+      "type": "product-header",
+      "settings": {
+        "show_logo": true,
+        "show_search": true,
+        "show_share": true,
+        "show_menu": true
+      }
+    },
+    "product_image_gallery": {
+      "type": "product-image-gallery",
+      "settings": {
+        "show_badges": true,
+        "badge_text": "Étanche",
+        "badge_icon": "☂️"
+      }
+    },
+    "product_details": {
+      "type": "product-details",
+      "settings": {
+        "show_tax_info": true,
+        "tax_text": "TVA comprise",
+        "show_seller": true,
+        "seller_label": "Vendu par",
+        "show_ratings": true,
+        "show_sales_count": true,
+        "sales_count": "31.1K",
+        "sales_label": "vendu",
+        "show_return_policy": true,
+        "return_policy_text": "Retours gratuits",
+        "show_description": true,
+        "description_length": 100,
+        "read_more_text": "Lire la suite"
+      }
+    },
+    "product_color_selector": {
+      "type": "product-color-selector",
+      "settings": {
+        "color_label": "Couleur",
+        "show_when_no_colors": false
+      }
+    },
+    "product_size_quantity": {
+      "type": "product-size-quantity",
+      "settings": {
+        "select_label": "Sélectionner",
+        "size_label": "Taille",
+        "quantity_label": "Quantité",
+        "show_size_guide": true,
+        "size_guide_label": "Guide des tailles"
+      }
+    },
+    "product_protections": {
+      "type": "product-protections",
+      "settings": {
+        "title": "Tes protections",
+        "protection_1_text": "Paiements sécurisés",
+        "protection_2_text": "Remboursement accéléré en cas d'articles perdus ou endommagés",
+        "protection_3_text": "Protection des clients",
+        "protection_4_text": "Assistance cl 24 h/24, 7 j/7"
+      }
+    },
+    "product_shipping_returns": {
+      "type": "product-shipping-returns",
+      "settings": {
+        "title": "Livraison et retours",
+        "delivery_title": "Livraison gratuite",
+        "delivery_date": "1-8 déc.",
+        "delivery_date_label": "Livraison prévue le",
+        "delivery_conditions": "conditions applicables.",
+        "delivery_conditions_prefix": "En cas d'expédition à Paris,",
+        "shipped_by": "Expédié par TikTok",
+        "return_title": "Politique de retours",
+        "return_policy_text": "L'article peut être retourné dans les 30 jours suivant la livraison. Le droit de rétractation statutaire s'applique également. D'autres droits peuvent s'appliquer, notamment tes droits de garantie légale."
+      }
+    },
+    "product_shop_info": {
+      "type": "product-shop-info",
+      "settings": {
+        "title": "À propos de cette boutique",
+        "shop_rating": "4.4",
+        "shop_reviews_count": "5892",
+        "shop_products_count": "21",
+        "shop_sales_count": "95.8K+",
+        "message_button_text": "Message",
+        "view_shop_text": "Voir la boutique",
+        "show_performance": true,
+        "performance_title": "Performance de la boutique",
+        "performance_text": "Meilleur que 99 % des autres vendeurs",
+        "stars_metric_text": "4+ étoiles",
+        "stars_percentage": 88,
+        "response_metric_text": "Répond dans les 24 heures",
+        "response_percentage": 100,
+        "show_learn_more": true,
+        "learn_more_text": "En savoir plus >"
+      }
+    },
+    "product_about": {
+      "type": "product-about",
+      "settings": {
+        "title": "À propos du produit",
+        "show_details": true,
+        "details_title": "Détails",
+        "show_brand": true,
+        "brand_label": "Marque",
+        "brand_value": "EIKELAND oakspirit",
+        "show_country": true,
+        "country_label": "Pays d'origine",
+        "country_value": "Chine",
+        "show_collar": true,
+        "collar_label": "Forme du col",
+        "collar_value": "Capuche",
+        "show_fit": true,
+        "fit_label": "Coupe",
+        "fit_value": "Ajusté"
+      }
+    },
+    "product_reviews": {
+      "type": "product-reviews",
+      "settings": {
+        "title": "Avis",
+        "overall_rating": "4.4",
+        "total_reviews": "1435",
+        "review_text_length": 150,
+        "see_more_text": "Voir plus",
+        "article_label": "Article",
+        "helpful_label": "Utile ?",
+        "translation_text": "Voir la traduction",
+        "verified_label": "Achat vérifié",
+        "show_load_more": true,
+        "load_more_text": "Voir plus d'avis",
+        "review_1_name": "G**y",
+        "review_1_location": "Royaume-Uni",
+        "review_1_verified": true,
+        "review_1_rating": 5,
+        "review_1_text": "Honestly looks great. Can't fault it. For the price it's at this is amazing. Buy this. It's got zip pockets and also another two extra pocket on the inside which is great for storing things.",
+        "review_1_article": "Royal Blue, L",
+        "review_1_date": "16 août 2025",
+        "review_1_helpful": "5",
+        "review_2_name": "H**y S**5",
+        "review_2_location": "Royaume-Uni",
+        "review_2_verified": true,
+        "review_2_rating": 5,
+        "review_2_text": "Couldn't be happier with this coat. Completely waterproof, wore it on my dog walk today. Looks class too. Go one size up.",
+        "review_2_article": "Beige, XL",
+        "review_2_date": "10 novembre 2025",
+        "review_2_helpful": ""
+      }
+    },
+    "product_add_to_cart": {
+      "type": "product-add-to-cart",
+      "settings": {
+        "add_to_cart_text": "Ajouter au panier",
+        "adding_text": "Ajout en cours...",
+        "sold_out_text": "Rupture de stock",
+        "unavailable_message": "Ce produit n'est pas disponible",
+        "show_buy_now": false,
+        "buy_now_text": "Acheter maintenant"
+      }
     }
   },
   "order": [
-    "main"
+    "product_header",
+    "product_image_gallery",
+    "product_details",
+    "product_color_selector",
+    "product_size_quantity",
+    "product_protections",
+    "product_shipping_returns",
+    "product_shop_info",
+    "product_about",
+    "product_reviews",
+    "product_add_to_cart"
   ]
 }

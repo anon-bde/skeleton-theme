@@ -1,0 +1,273 @@
+{% comment %}
+  TikTok Shop style product about section
+  Mobile-first optimized with Tailwind CSS
+  Features: Product details/attributes
+{% endcomment %}
+
+{% assign product = all_products[section.settings.product] | default: product %}
+
+<div class="bg-gray-900 text-white px-4 py-6">
+  {% comment %} Section Title {% endcomment %}
+  <h2 class="text-2xl font-bold mb-4">
+    {{ section.settings.title | default: "À propos du produit" }}
+  </h2>
+
+  {% comment %} Details Subsection {% endcomment %}
+  {% if section.settings.show_details %}
+    <div>
+      <h3 class="text-lg font-bold mb-4">
+        {{ section.settings.details_title | default: "Détails" }}
+      </h3>
+
+      <div class="space-y-3">
+        {% comment %} Brand {% endcomment %}
+        {% if section.settings.show_brand %}
+          <div class="flex justify-between items-start py-2 border-b border-gray-800">
+            <span class="text-sm text-gray-400 font-medium">
+              {{ section.settings.brand_label | default: "Marque" }}
+            </span>
+            <span class="text-sm text-white text-right flex-1 ml-4">
+              {{ section.settings.brand_value | default: product.vendor | default: "EIKELAND oakspirit" }}
+            </span>
+          </div>
+        {% endif %}
+
+        {% comment %} Country of Origin {% endcomment %}
+        {% if section.settings.show_country %}
+          <div class="flex justify-between items-start py-2 border-b border-gray-800">
+            <span class="text-sm text-gray-400 font-medium">
+              {{ section.settings.country_label | default: "Pays d'origine" }}
+            </span>
+            <span class="text-sm text-white text-right flex-1 ml-4">
+              {{ section.settings.country_value | default: "Chine" }}
+            </span>
+          </div>
+        {% endif %}
+
+        {% comment %} Collar Shape {% endcomment %}
+        {% if section.settings.show_collar %}
+          <div class="flex justify-between items-start py-2 border-b border-gray-800">
+            <span class="text-sm text-gray-400 font-medium">
+              {{ section.settings.collar_label | default: "Forme du col" }}
+            </span>
+            <span class="text-sm text-white text-right flex-1 ml-4">
+              {{ section.settings.collar_value | default: "Capuche" }}
+            </span>
+          </div>
+        {% endif %}
+
+        {% comment %} Fit {% endcomment %}
+        {% if section.settings.show_fit %}
+          <div class="flex justify-between items-start py-2 border-b border-gray-800">
+            <span class="text-sm text-gray-400 font-medium">
+              {{ section.settings.fit_label | default: "Coupe" }}
+            </span>
+            <span class="text-sm text-white text-right flex-1 ml-4">
+              {{ section.settings.fit_value | default: "Ajusté" }}
+            </span>
+          </div>
+        {% endif %}
+
+        {% comment %} Custom Attributes {% endcomment %}
+        {% if section.settings.custom_attribute_1_label != blank %}
+          <div class="flex justify-between items-start py-2 border-b border-gray-800">
+            <span class="text-sm text-gray-400 font-medium">
+              {{ section.settings.custom_attribute_1_label }}
+            </span>
+            <span class="text-sm text-white text-right flex-1 ml-4">
+              {{ section.settings.custom_attribute_1_value }}
+            </span>
+          </div>
+        {% endif %}
+
+        {% if section.settings.custom_attribute_2_label != blank %}
+          <div class="flex justify-between items-start py-2 border-b border-gray-800">
+            <span class="text-sm text-gray-400 font-medium">
+              {{ section.settings.custom_attribute_2_label }}
+            </span>
+            <span class="text-sm text-white text-right flex-1 ml-4">
+              {{ section.settings.custom_attribute_2_value }}
+            </span>
+          </div>
+        {% endif %}
+
+        {% if section.settings.custom_attribute_3_label != blank %}
+          <div class="flex justify-between items-start py-2 border-b border-gray-800">
+            <span class="text-sm text-gray-400 font-medium">
+              {{ section.settings.custom_attribute_3_label }}
+            </span>
+            <span class="text-sm text-white text-right flex-1 ml-4">
+              {{ section.settings.custom_attribute_3_value }}
+            </span>
+          </div>
+        {% endif %}
+
+        {% comment %} Use product metafields if available {% endcomment %}
+        {% if product.metafields.custom.product_attributes != blank %}
+          {% assign attributes = product.metafields.custom.product_attributes.value %}
+          {% if attributes.size > 0 %}
+            {% for attribute in attributes %}
+              <div class="flex justify-between items-start py-2 border-b border-gray-800">
+                <span class="text-sm text-gray-400 font-medium">
+                  {{ attribute.label }}
+                </span>
+                <span class="text-sm text-white text-right flex-1 ml-4">
+                  {{ attribute.value }}
+                </span>
+              </div>
+            {% endfor %}
+          {% endif %}
+        {% endif %}
+      </div>
+    </div>
+  {% endif %}
+</div>
+
+{% schema %}
+{
+  "name": "Product About",
+  "settings": [
+    {
+      "type": "product",
+      "id": "product",
+      "label": "Product",
+      "info": "Leave empty to use the current product"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Section title",
+      "default": "À propos du produit"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_details",
+      "label": "Show details",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "details_title",
+      "label": "Details title",
+      "default": "Détails"
+    },
+    {
+      "type": "header",
+      "content": "Product Attributes"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_brand",
+      "label": "Show brand",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "brand_label",
+      "label": "Brand label",
+      "default": "Marque"
+    },
+    {
+      "type": "text",
+      "id": "brand_value",
+      "label": "Brand value",
+      "default": "EIKELAND oakspirit",
+      "info": "Leave empty to use product vendor"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_country",
+      "label": "Show country of origin",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "country_label",
+      "label": "Country label",
+      "default": "Pays d'origine"
+    },
+    {
+      "type": "text",
+      "id": "country_value",
+      "label": "Country value",
+      "default": "Chine"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_collar",
+      "label": "Show collar shape",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "collar_label",
+      "label": "Collar label",
+      "default": "Forme du col"
+    },
+    {
+      "type": "text",
+      "id": "collar_value",
+      "label": "Collar value",
+      "default": "Capuche"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_fit",
+      "label": "Show fit",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "fit_label",
+      "label": "Fit label",
+      "default": "Coupe"
+    },
+    {
+      "type": "text",
+      "id": "fit_value",
+      "label": "Fit value",
+      "default": "Ajusté"
+    },
+    {
+      "type": "header",
+      "content": "Custom Attributes"
+    },
+    {
+      "type": "text",
+      "id": "custom_attribute_1_label",
+      "label": "Custom attribute 1 label"
+    },
+    {
+      "type": "text",
+      "id": "custom_attribute_1_value",
+      "label": "Custom attribute 1 value"
+    },
+    {
+      "type": "text",
+      "id": "custom_attribute_2_label",
+      "label": "Custom attribute 2 label"
+    },
+    {
+      "type": "text",
+      "id": "custom_attribute_2_value",
+      "label": "Custom attribute 2 value"
+    },
+    {
+      "type": "text",
+      "id": "custom_attribute_3_label",
+      "label": "Custom attribute 3 label"
+    },
+    {
+      "type": "text",
+      "id": "custom_attribute_3_value",
+      "label": "Custom attribute 3 value"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Product About"
+    }
+  ]
+}
+{% endschema %}
+

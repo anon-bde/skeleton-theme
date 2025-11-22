@@ -1,0 +1,91 @@
+{% comment %}
+  TikTok Shop style shipped by section
+  Mobile-first optimized with Tailwind CSS
+  Features: Brand info and add note option
+{% endcomment %}
+
+<div class="bg-gray-900 text-white px-4 py-4 border-b border-gray-800">
+  <div class="flex items-center justify-between">
+    <div class="flex-1">
+      <p class="text-sm text-gray-400 mb-2">
+        {{ section.settings.shipped_by_label | default: "Expédié par" }}
+      </p>
+      <button
+        type="button"
+        class="flex items-center gap-2 hover:opacity-80 transition-opacity"
+        onclick="alert('{{ section.settings.brand_name | default: shop.name }}')"
+      >
+        {% if section.settings.brand_logo != blank %}
+          <img 
+            src="{{ section.settings.brand_logo | image_url: width: 24 }}"
+            alt="{{ section.settings.brand_name | default: shop.name }}"
+            class="w-6 h-6 rounded-full object-cover"
+          >
+        {% else %}
+          <div class="w-6 h-6 rounded-full bg-white flex items-center justify-center">
+            <svg class="w-4 h-4 text-gray-900" fill="currentColor" viewBox="0 0 20 20">
+              <path d="M10 2L3 7v11h4v-6h6v6h4V7l-7-5z"/>
+            </svg>
+          </div>
+        {% endif %}
+        <span class="font-semibold">{{ section.settings.brand_name | default: shop.name }}</span>
+        <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+        </svg>
+      </button>
+    </div>
+    
+    {% if section.settings.show_add_note %}
+      <button
+        type="button"
+        class="text-sm text-blue-400 hover:text-blue-300"
+        onclick="alert('{{ section.settings.add_note_text | default: "Add a note" }}')"
+      >
+        {{ section.settings.add_note_text | default: "Ajouter une note" }}
+      </button>
+    {% endif %}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Checkout Shipped By",
+  "settings": [
+    {
+      "type": "text",
+      "id": "shipped_by_label",
+      "label": "Shipped by label",
+      "default": "Expédié par"
+    },
+    {
+      "type": "image_picker",
+      "id": "brand_logo",
+      "label": "Brand logo"
+    },
+    {
+      "type": "text",
+      "id": "brand_name",
+      "label": "Brand name",
+      "default": "EIKELAND"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_add_note",
+      "label": "Show add note link",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "add_note_text",
+      "label": "Add note text",
+      "default": "Ajouter une note"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Checkout Shipped By"
+    }
+  ]
+}
+{% endschema %}
+

@@ -1,0 +1,78 @@
+{% comment %}
+  TikTok Shop style checkout bottom CTA section
+  Mobile-first optimized with Tailwind CSS
+  Features: Total and add address button
+{% endcomment %}
+
+<div class="fixed bottom-0 left-0 right-0 z-50 bg-gray-900 border-t border-gray-800 px-4 py-4 safe-area-inset-bottom">
+  {% comment %} Total {% endcomment %}
+  <div class="flex items-center justify-between mb-4">
+    <span class="text-sm text-gray-300">
+      {{ section.settings.total_label | default: "Total (1 article)" }}
+    </span>
+    <span class="text-xl font-bold">
+      {{ section.settings.total_amount | default: "16,45 €" }}
+    </span>
+  </div>
+
+  {% comment %} Add Address Button {% endcomment %}
+  <button
+    type="button"
+    class="w-full bg-rose-500 hover:bg-rose-600 active:bg-rose-700 text-white font-semibold py-4 px-6 rounded-lg transition-colors"
+    onclick="alert('{{ section.settings.button_text | default: "Add address" }}')"
+  >
+    {{ section.settings.button_text | default: "Ajouter une adresse" }}
+  </button>
+</div>
+
+<style>
+  /* Add bottom padding to body to prevent content from being hidden behind fixed button */
+  body:has(#checkout-bottom-cta-{{ section.id }}) {
+    padding-bottom: 140px; /* Height of button bar + padding */
+  }
+  
+  @supports not selector(:has(*)) {
+    body {
+      padding-bottom: 140px;
+    }
+  }
+  
+  /* Ensure the checkout page has proper spacing */
+  .shopify-section:last-of-type {
+    margin-bottom: 140px;
+  }
+</style>
+
+<div id="checkout-bottom-cta-{{ section.id }}"></div>
+
+{% schema %}
+{
+  "name": "Checkout Bottom CTA",
+  "settings": [
+    {
+      "type": "text",
+      "id": "total_label",
+      "label": "Total label",
+      "default": "Total (1 article)"
+    },
+    {
+      "type": "text",
+      "id": "total_amount",
+      "label": "Total amount",
+      "default": "16,45 €"
+    },
+    {
+      "type": "text",
+      "id": "button_text",
+      "label": "Button text",
+      "default": "Ajouter une adresse"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Checkout Bottom CTA"
+    }
+  ]
+}
+{% endschema %}
+

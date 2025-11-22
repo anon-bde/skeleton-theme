@@ -1,0 +1,157 @@
+{% comment %}
+  TikTok Shop style checkout product details
+  Mobile-first optimized with Tailwind CSS
+  Features: Product image, title, variant, price, quantity
+{% endcomment %}
+
+{% assign product = all_products[section.settings.product] | default: cart.items.first.product %}
+{% assign current_variant = product.selected_or_first_available_variant | default: cart.items.first.variant %}
+
+<div class="bg-gray-900 text-white px-4 py-4 border-b border-gray-800">
+  <div class="flex gap-4">
+    {% comment %} Product Image {% endcomment %}
+    <div class="flex-shrink-0">
+      {% if product.featured_image %}
+        {% render 'image', 
+          image: product.featured_image, 
+          class: 'w-20 h-20 object-cover rounded-lg',
+          loading: 'lazy'
+        %}
+      {% else %}
+        <div class="w-20 h-20 bg-gray-800 rounded-lg flex items-center justify-center">
+          <svg class="w-10 h-10 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+          </svg>
+        </div>
+      {% endif %}
+    </div>
+
+    {% comment %} Product Info {% endcomment %}
+    <div class="flex-1 min-w-0">
+      <h3 class="text-sm font-medium mb-1" style="display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">
+        {{ product.title | default: section.settings.product_title | default: "Veste de sport décontractée pour hommes, conception à fermeture é..." }}
+      </h3>
+      
+      {% comment %} Variant Info {% endcomment %}
+      <p class="text-xs text-gray-400 mb-2">
+        {{ current_variant.title | default: section.settings.variant_text | default: "Beige, S" }}
+      </p>
+
+      {% comment %} Price {% endcomment %}
+      <div class="flex items-center justify-between">
+        <span class="text-base font-semibold">
+          {{ current_variant.price | money | default: section.settings.product_price | default: "16,45 €" }}
+        </span>
+
+        {% comment %} Quantity Selector {% endcomment %}
+        <div class="relative">
+          <button
+            type="button"
+            class="flex items-center gap-2 px-3 py-1.5 bg-gray-800 hover:bg-gray-700 rounded-lg text-sm transition-colors"
+            onclick="toggleQuantityDropdown(this)"
+          >
+            <span class="quantity-display">{{ section.settings.quantity | default: 1 }}</span>
+            <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+            </svg>
+          </button>
+          
+          <div class="quantity-dropdown hidden absolute right-0 top-full mt-1 bg-gray-800 border border-gray-700 rounded-lg shadow-xl z-10 min-w-[80px]">
+            {% for i in (1..10) %}
+              <button
+                type="button"
+                class="w-full text-left px-4 py-2 text-sm hover:bg-gray-700 transition-colors quantity-option"
+                data-quantity="{{ i }}"
+                onclick="selectQuantity({{ i }})"
+              >
+                {{ i }}
+              </button>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  function toggleQuantityDropdown(button) {
+    const dropdown = button.nextElementSibling;
+    if (dropdown) {
+      dropdown.classList.toggle('hidden');
+    }
+    
+    // Close on outside click
+    document.addEventListener('click', function closeDropdown(e) {
+      if (!button.contains(e.target) && !dropdown.contains(e.target)) {
+        dropdown.classList.add('hidden');
+        document.removeEventListener('click', closeDropdown);
+      }
+    });
+  }
+
+  function selectQuantity(quantity) {
+    const display = document.querySelector('.quantity-display');
+    if (display) {
+      display.textContent = quantity;
+    }
+    
+    // Close dropdown
+    const dropdown = document.querySelector('.quantity-dropdown');
+    if (dropdown) {
+      dropdown.classList.add('hidden');
+    }
+    
+    // Dispatch event
+    document.dispatchEvent(new CustomEvent('checkout:quantity-changed', {
+      detail: { quantity: quantity }
+    }));
+  }
+</script>
+
+{% schema %}
+{
+  "name": "Checkout Product Details",
+  "settings": [
+    {
+      "type": "product",
+      "id": "product",
+      "label": "Product",
+      "info": "Leave empty to use cart items"
+    },
+    {
+      "type": "text",
+      "id": "product_title",
+      "label": "Product title",
+      "default": "Veste de sport décontractée pour hommes, conception à fermeture é..."
+    },
+    {
+      "type": "text",
+      "id": "variant_text",
+      "label": "Variant text",
+      "default": "Beige, S"
+    },
+    {
+      "type": "text",
+      "id": "product_price",
+      "label": "Product price",
+      "default": "16,45 €"
+    },
+    {
+      "type": "range",
+      "id": "quantity",
+      "label": "Default quantity",
+      "min": 1,
+      "max": 10,
+      "step": 1,
+      "default": 1
+    }
+  ],
+  "presets": [
+    {
+      "name": "Checkout Product Details"
+    }
+  ]
+}
+{% endschema %}
+

@@ -1,0 +1,105 @@
+{% comment %}
+  TikTok Shop style offers and updates section
+  Mobile-first optimized with Tailwind CSS
+  Features: Toggle switch for receiving offers
+{% endcomment %}
+
+<div class="bg-gray-900 text-white px-4 py-4 border-b border-gray-800">
+  <div class="flex items-start justify-between gap-4 mb-2">
+    <div class="flex-1">
+      <h3 class="text-base font-semibold mb-2">
+        {{ section.settings.title | default: "Recevoir des offres et des mises à jour" }}
+      </h3>
+      <p class="text-sm text-gray-300 leading-relaxed">
+        {{ section.settings.description | default: "Reçois des offres et des mises à jour de la part de EIKELAND dans ta boîte de réception TikTok Shop." }}
+      </p>
+    </div>
+    
+    {% comment %} Toggle Switch {% endcomment %}
+    <label class="relative inline-flex items-center cursor-pointer flex-shrink-0">
+      <input 
+        type="checkbox" 
+        class="sr-only" 
+        id="offers-toggle-{{ section.id }}"
+        checked
+        onchange="handleOffersToggle(this)"
+      >
+      <div class="toggle-switch relative w-11 h-6 bg-blue-600 rounded-full transition-colors">
+        <div class="toggle-slider absolute top-[2px] left-[2px] w-5 h-5 bg-white rounded-full transition-transform translate-x-5"></div>
+      </div>
+    </label>
+  </div>
+
+  {% if section.settings.show_learn_more %}
+    <button
+      type="button"
+      class="text-sm text-blue-400 hover:text-blue-300 mt-2"
+      onclick="alert('{{ section.settings.learn_more_text | default: "Learn more" }}')"
+    >
+      {{ section.settings.learn_more_text | default: "En savoir plus" }}
+    </button>
+  {% endif %}
+</div>
+
+<script>
+  function handleOffersToggle(toggle) {
+    const isChecked = toggle.checked;
+    const switchElement = toggle.nextElementSibling;
+    const slider = switchElement.querySelector('.toggle-slider');
+    
+    if (isChecked) {
+      switchElement.classList.remove('bg-gray-700');
+      switchElement.classList.add('bg-blue-600');
+      slider.classList.add('translate-x-5');
+      slider.classList.remove('translate-x-0');
+    } else {
+      switchElement.classList.remove('bg-blue-600');
+      switchElement.classList.add('bg-gray-700');
+      slider.classList.remove('translate-x-5');
+      slider.classList.add('translate-x-0');
+    }
+    
+    // Dispatch event for other sections to listen to
+    document.dispatchEvent(new CustomEvent('checkout:offers-toggle', {
+      detail: { enabled: isChecked }
+    }));
+  }
+</script>
+
+{% schema %}
+{
+  "name": "Checkout Offers & Updates",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Section title",
+      "default": "Recevoir des offres et des mises à jour"
+    },
+    {
+      "type": "textarea",
+      "id": "description",
+      "label": "Description",
+      "default": "Reçois des offres et des mises à jour de la part de EIKELAND dans ta boîte de réception TikTok Shop."
+    },
+    {
+      "type": "checkbox",
+      "id": "show_learn_more",
+      "label": "Show learn more link",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "learn_more_text",
+      "label": "Learn more text",
+      "default": "En savoir plus"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Checkout Offers & Updates"
+    }
+  ]
+}
+{% endschema %}
+

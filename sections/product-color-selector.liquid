@@ -1,0 +1,177 @@
+{% comment %}
+  TikTok Shop style product color selector
+  Mobile-first optimized with Tailwind CSS
+  Features: Color swatches in a grid layout
+{% endcomment %}
+
+{% assign product = all_products[section.settings.product] | default: product %}
+{% assign color_option = null %}
+
+{% for option in product.options_with_values %}
+  {% assign option_name_lower = option.name | downcase %}
+  {% if option_name_lower == 'color' or option_name_lower == 'couleur' or option_name_lower == 'colour' %}
+    {% assign color_option = option %}
+    {% break %}
+  {% endif %}
+{% endfor %}
+
+{% if color_option != null %}
+  <div class="bg-gray-900 text-white px-4 py-4">
+    <div class="mb-3">
+      <label class="text-sm font-medium text-gray-300">
+        {{ section.settings.color_label | default: "Couleur" }}: 
+        <span class="text-white font-semibold" id="selected-color-{{ section.id }}">
+          {{ color_option.selected_value }}
+        </span>
+      </label>
+    </div>
+
+    <div class="grid grid-cols-6 gap-3">
+      {% for value in color_option.values %}
+        {% assign is_selected = false %}
+        {% if value == color_option.selected_value %}
+          {% assign is_selected = true %}
+        {% endif %}
+
+        {% comment %} Try to find a color value from metafields or use a default mapping {% endcomment %}
+        {% assign color_value = value | downcase %}
+        {% assign color_class = 'bg-gray-500' %}
+        
+        {% case color_value %}
+          {% when 'beige' %}
+            {% assign color_class = 'bg-amber-100' %}
+          {% when 'noir' or 'black' %}
+            {% assign color_class = 'bg-black' %}
+          {% when 'gris' or 'gray' or 'grey' %}
+            {% assign color_class = 'bg-gray-500' %}
+          {% when 'bleu' or 'blue' %}
+            {% assign color_class = 'bg-blue-600' %}
+          {% when 'jaune' or 'yellow' %}
+            {% assign color_class = 'bg-yellow-400' %}
+          {% when 'vert' or 'green' %}
+            {% assign color_class = 'bg-green-500' %}
+          {% when 'rouge' or 'red' %}
+            {% assign color_class = 'bg-red-500' %}
+          {% when 'blanc' or 'white' %}
+            {% assign color_class = 'bg-white border border-gray-300' %}
+        {% endcase %}
+
+        <button
+          type="button"
+          class="color-swatch relative w-full aspect-square rounded-lg transition-all duration-200 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-900"
+          data-color-value="{{ value }}"
+          data-color-index="{{ forloop.index0 }}"
+          aria-label="Select color {{ value }}"
+          {% if is_selected %}
+            aria-pressed="true"
+          {% endif %}
+        >
+          <div class="w-full h-full rounded-lg {{ color_class }} {% if is_selected %}ring-4 ring-white ring-offset-2 ring-offset-gray-900{% endif %}"></div>
+          {% if is_selected %}
+            <div class="absolute inset-0 flex items-center justify-center">
+              <svg class="w-5 h-5 text-white drop-shadow-lg" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+              </svg>
+            </div>
+          {% endif %}
+        </button>
+      {% endfor %}
+    </div>
+  </div>
+
+  <script>
+    (function() {
+      const sectionId = '{{ section.id }}';
+      const colorSwatches = document.querySelectorAll(`[data-color-value]`);
+      const selectedColorDisplay = document.getElementById(`selected-color-${sectionId}`);
+      
+      colorSwatches.forEach(swatch => {
+        swatch.addEventListener('click', function() {
+          const colorValue = this.getAttribute('data-color-value');
+          
+          // Update selected color display
+          if (selectedColorDisplay) {
+            selectedColorDisplay.textContent = colorValue;
+          }
+          
+          // Update visual selection
+          colorSwatches.forEach(s => {
+            const swatchInner = s.querySelector('div');
+            const checkmark = s.querySelector('svg');
+            
+            if (s === this) {
+              swatchInner.classList.add('ring-4', 'ring-white', 'ring-offset-2', 'ring-offset-gray-900');
+              if (!checkmark) {
+                const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+                svg.setAttribute('class', 'w-5 h-5 text-white drop-shadow-lg');
+                svg.setAttribute('fill', 'currentColor');
+                svg.setAttribute('viewBox', '0 0 20 20');
+                svg.innerHTML = '<path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />';
+                const container = document.createElement('div');
+                container.className = 'absolute inset-0 flex items-center justify-center';
+                container.appendChild(svg);
+                s.appendChild(container);
+              }
+              s.setAttribute('aria-pressed', 'true');
+            } else {
+              swatchInner.classList.remove('ring-4', 'ring-white', 'ring-offset-2', 'ring-offset-gray-900');
+              const checkmarkContainer = s.querySelector('.absolute.inset-0');
+              if (checkmarkContainer) {
+                checkmarkContainer.remove();
+              }
+              s.setAttribute('aria-pressed', 'false');
+            }
+          });
+          
+          // Trigger variant change event (for integration with other sections)
+          document.dispatchEvent(new CustomEvent('product:color-change', {
+            detail: { color: colorValue }
+          }));
+        });
+      });
+    })();
+  </script>
+{% else %}
+  {% if section.settings.show_when_no_colors %}
+    <div class="bg-gray-900 text-white px-4 py-4">
+      <p class="text-sm text-gray-400">{{ section.settings.no_colors_message | default: "No color options available" }}</p>
+    </div>
+  {% endif %}
+{% endif %}
+
+{% schema %}
+{
+  "name": "Product Color Selector",
+  "settings": [
+    {
+      "type": "product",
+      "id": "product",
+      "label": "Product",
+      "info": "Leave empty to use the current product"
+    },
+    {
+      "type": "text",
+      "id": "color_label",
+      "label": "Color label",
+      "default": "Couleur"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_when_no_colors",
+      "label": "Show section when no color options",
+      "default": false
+    },
+    {
+      "type": "text",
+      "id": "no_colors_message",
+      "label": "No colors message"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Product Color Selector"
+    }
+  ]
+}
+{% endschema %}
+

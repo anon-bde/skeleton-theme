@@ -1,0 +1,39 @@
+{% comment %}
+  TikTok Shop style checkout terms and conditions
+  Mobile-first optimized with Tailwind CSS
+  Features: Terms acceptance text
+{% endcomment %}
+
+{% if section.settings.show_terms %}
+  <div class="bg-gray-900 text-white px-4 py-4">
+    <p class="text-sm text-gray-300 leading-relaxed">
+      {{ section.settings.terms_text | default: "En passant cette commande, tu acceptes les Conditions d'utilisation de TikTok Shop pour l'UE et les Conditions de vente du vendeur pour l'UE. Pour en savoir plus, consulte la UE:Politique de Retours, Rétractation et Garantie Légale et le Politique de confidentialité de TikTok." }}
+    </p>
+  </div>
+{% endif %}
+
+{% schema %}
+{
+  "name": "Checkout Terms",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "show_terms",
+      "label": "Show terms and conditions",
+      "default": true
+    },
+    {
+      "type": "textarea",
+      "id": "terms_text",
+      "label": "Terms and conditions text",
+      "default": "En passant cette commande, tu acceptes les Conditions d'utilisation de TikTok Shop pour l'UE et les Conditions de vente du vendeur pour l'UE. Pour en savoir plus, consulte la UE:Politique de Retours, Rétractation et Garantie Légale et le Politique de confidentialité de TikTok."
+    }
+  ],
+  "presets": [
+    {
+      "name": "Checkout Terms"
+    }
+  ]
+}
+{% endschema %}
+
